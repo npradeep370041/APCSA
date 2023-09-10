@@ -9,23 +9,24 @@ import java.io.PrintWriter;
  */
 public class USMap {
 	public static void drawMap() {
+		// FileUtils opening .txt files
 		Scanner inFile = FileUtils.openToRead("cities.txt");
 		Scanner inFile2 = FileUtils.openToRead("bigCities.txt");
 		Scanner inFile3 = FileUtils.openToRead("bigCities.txt");
 		
-		// X Coordinate
+		// Array of X-Coordinate values for all cities
 		double[] y = new double[1112];
 		
-		// Y Coordinate
+		// Array of Y-Coordinate values for all cities
 		double[] x = new double[1112];
 		
-		// All Cities
+		// All City Names
 		String[] cities = new String[1112];
 		
-		// Big Cities Information
+		// Name and Population of each of the Big Cities
 		String[] bigCitiesInfo = new String[275];
 		
-		// Population Information
+		// Population of each of the Big Cities
 		int[] populationInfo = new int[275];
 		
 		// Reading files
@@ -54,13 +55,15 @@ public class USMap {
 			}
 		
 		
-		// Verifying Big Cities
+		// Verifying Big Cities(Making sure there are no repeats and removing big cities with no coordinate data)
 		String[] bigCheck = new String[275];
 		for(int m = 0; m < 275; m++) {
 			for(int n = 0; n < 1112; n++) {
 				if(bigCitiesInfo[m].contains(cities[n])) {
 					boolean noRepeats = true;
 					for(int o = 0; o < n; o++) {
+						
+						// If there are repeated cities, only one will be counted
 						if(cities[n].equals(cities[o])) {
 							noRepeats = false;
 							break;
@@ -72,8 +75,9 @@ public class USMap {
 				}
 			}
 		}
+					
 		
-		// Full List of Big Cities and Population
+		// Full List of Big Cities and Populations
 		String[] bigCities = new String[120];
 		int[] population = new int[120];
 		int p = 0;
@@ -88,27 +92,44 @@ public class USMap {
 			}
 		}
 		
-		// Mapping Big Cities to Coordinates
+		// Getting coordinates of Big Cities
+		double[] xBig = new double[120];
+		double[] yBig = new double[120];
 		for(int r = 0; r < 120; r++) {
 			for(int s = 0; s < 1112; s++) {
-				if(bigCities[r].equals(cities[s]) && r < 10) {
-					StdDraw.setPenRadius(0.6 * (Math.sqrt(population[r])/18500));
-					StdDraw.setPenColor(StdDraw.RED);
-					StdDraw.point(x[s], y[s]);
-				}
-				else if(bigCities[r].equals(cities[s])) {
-					StdDraw.setPenRadius(0.6 * (Math.sqrt(population[r])/18500));
-					StdDraw.setPenColor(StdDraw.BLUE);
-					StdDraw.point(x[s], y[s]);
-				}
-				else {
-					StdDraw.setPenRadius(0.006);
-					StdDraw.setPenColor(StdDraw.DARK_GRAY);
-					StdDraw.point(x[s], y[s]);
+				if(bigCities[r].equals(cities[s])) {
+					yBig[r] = y[s];
+					xBig[r] = x[s];
 				}
 			}
 		}
-		System.out.println("done");
+		
+		// Mapping Cities to Coordinates
+			
+			// Big Cities
+			for(int u = 0; u < 120; u++) {
+				
+				// 10 Biggest Cities
+				if(u < 10) {
+					StdDraw.setPenRadius(0.6 * (Math.sqrt(population[u])/18500));
+					StdDraw.setPenColor(StdDraw.RED);
+					StdDraw.point(xBig[u], yBig[u]);
+				}
+				
+				// Rest of the Big Cities
+				else {
+					StdDraw.setPenRadius(0.6 * (Math.sqrt(population[u])/18500));
+					StdDraw.setPenColor(StdDraw.BLUE);
+					StdDraw.point(xBig[u], yBig[u]);
+				}
+			} 
+			
+			// Regular Cities
+			for(int t = 0; t < 1112; t++) {
+				StdDraw.setPenRadius(0.006);
+				StdDraw.setPenColor(StdDraw.DARK_GRAY);
+				StdDraw.point(x[t], y[t]);
+			}
 	}
 		
 	public static void setupCanvas() {
