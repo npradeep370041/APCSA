@@ -54,7 +54,6 @@ public class USMap {
 				inFile3.nextLine();
 			}
 		
-		
 		// Verifying Big Cities(Making sure there are no repeats and removing big cities with no coordinate data)
 		String[] bigCheck = new String[275];
 		for(int m = 0; m < 275; m++) {
@@ -74,8 +73,7 @@ public class USMap {
 					}
 				}
 			}
-		}
-					
+		}		
 		
 		// Full List of Big Cities and Populations
 		String[] bigCities = new String[120];
