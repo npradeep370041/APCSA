@@ -30,6 +30,8 @@ public class SimpleGraphics extends GraphicsProgram {
 	private GOval circle;
 	private double radius = 156;
 	
+	private GRect rectangle;
+	
 	/**	The init() method is executed before the run() method.
 	 *	All initialization steps should be performed here.
 	 */
@@ -42,6 +44,7 @@ public class SimpleGraphics extends GraphicsProgram {
 	 *	Exercise hint: Use one-dimensional arrays for the GOval's and GRect's.
 	 */
 	public void run() {
+		// target
 		boolean isRed = true;
 		for(int i = 0; i < 5;  i++) {
 			circle = new GOval(221 + i * 24, 313 + i * 24, radius * 2, radius * 2);
@@ -56,7 +59,19 @@ public class SimpleGraphics extends GraphicsProgram {
 			}
 			add(circle);
 			radius = radius - 24;
+			
 		}
+		
+		// bricks
+		/* (int j = 0; j < 55; j++) {
+			rectangle = new GRect(127 + j * 50, 0 + j * 20, 20, 50);
+		}
+		add(rectangle); */
+		
+		rectangle = new GRect(50, 100, 100, 100);
+		add(rectangle);
+		
+		
 	}
 }
-// 754 469
+
