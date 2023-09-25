@@ -4,8 +4,8 @@ import java.util.Scanner;
  *	MVCipher - Add your description here
  *	Requires Prompt and FileUtils classes.
  *	
- *	@author	
- *	@since	
+ *	@author	Naithik Pradeep
+ *	@since	September 21, 2023
  */
 public class MVCipher {
 	
@@ -68,7 +68,6 @@ public class MVCipher {
 			fileName = Prompt.getString("Name of file to decrypt");
 		}
 		Scanner inputFile = FileUtils.openToRead(fileName);
-		
 		
 		/* Prompt for an output file name */
 		String outputFile = Prompt.getString("Name of output file");
