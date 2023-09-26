@@ -4,16 +4,18 @@ import java.util.Scanner;
  *	MVCipher - Add your description here
  *	Requires Prompt and FileUtils classes.
  *	
- *	@author	Naithik Pradeep
- *	@since	September 21, 2023
+ *	@author	
+ *	@since	
  */
 public class MVCipher {
 	
 	// fields go here
-		
+	private static char[] keyLetters;	
 	/** Constructor */
-	public MVCipher() { }
-	
+	public MVCipher() {
+
+	}
+		
 	public static void main(String[] args) {
 		MVCipher mvc = new MVCipher();
 		mvc.run();
@@ -53,6 +55,10 @@ public class MVCipher {
 			}	
 			else {
 				key = input.toUpperCase();
+				for(int initializer = 0; initializer < key.length(); initializer++) {
+					keyLetters = new char[key.length()];
+					keyLetters[initializer] = key.charAt(initializer);
+				}
 			}
 		}
 		
@@ -60,14 +66,14 @@ public class MVCipher {
 		int crypt = Prompt.getInt("Encrypt or decrypt?", 1, 2);
 			
 		/* Prompt for an input file name */
-		String fileName = "";
+		String inputFile = "";
 		if(crypt == 1) {
-			fileName = Prompt.getString("Name of file to encrypt");
+			inputFile = Prompt.getString("Name of file to encrypt");
 		}
 		else {
-			fileName = Prompt.getString("Name of file to decrypt");
+			inputFile = Prompt.getString("Name of file to decrypt");
 		}
-		Scanner inputFile = FileUtils.openToRead(fileName);
+		
 		
 		/* Prompt for an output file name */
 		String outputFile = Prompt.getString("Name of output file");
@@ -75,6 +81,7 @@ public class MVCipher {
 		/* Read input file, encrypt or decrypt, and print to output file */
 		if(crypt == 1) {
 			System.out.println("The encrypted file " + outputFile + " has been created using the keyword -> " + key);
+			encrypt(inputFile, outputFile);
 		}
 		else {
 			System.out.println("The decrypted file " + outputFile + " has been created using the keyword -> " + key);
@@ -85,8 +92,26 @@ public class MVCipher {
 	
 	// other methods go here
 	
-	public static void encrypt() {
-		
+	public static void encrypt(String inputFile, String outputFile) {
+		Scanner readFile = FileUtils.openToRead(inputFile);
+		int numLetters = 0;
+		while(readFile.hasNext()) {
+			String line = readFile.nextLine();
+			for(int i = 0; i < line.length(); i++) {
+				char character = line.charAt(i);
+				int keyCharacter = keyLetters[numLetters];
+				if((character >= 'A' && character <= 'Z') || (character >= 'a' && character <= 'z')) {
+					character = (char)(character + keyCharacter - 64);
+					numLetters++;
+					if(numLetters == keyLetters.length) {
+						numLetters = 0;
+					}
+				}
+				
+				System.out.print(character);
+			}
+			System.out.print("\n");
+		}
 	}
 	public static void decrypt() {
 		
