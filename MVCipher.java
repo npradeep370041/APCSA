@@ -55,10 +55,8 @@ public class MVCipher {
 			}	
 			else {
 				key = input.toUpperCase();
-				for(int initializer = 0; initializer < key.length(); initializer++) {
-					keyLetters = new char[key.length()];
-					keyLetters[initializer] = key.charAt(initializer);
-				}
+				keyLetters = key.toCharArray();
+				
 			}
 		}
 		
@@ -99,16 +97,15 @@ public class MVCipher {
 			String line = readFile.nextLine();
 			for(int i = 0; i < line.length(); i++) {
 				char character = line.charAt(i);
-				int keyCharacter = keyLetters[numLetters];
 				if((character >= 'A' && character <= 'Z') || (character >= 'a' && character <= 'z')) {
-					character = (char)(character + keyCharacter - 64);
+					character = (char)(character + keyLetters[numLetters] - 64);
 					numLetters++;
-					if(numLetters == keyLetters.length) {
+					if(numLetters >= keyLetters.length) {
 						numLetters = 0;
 					}
 				}
-				
 				System.out.print(character);
+				
 			}
 			System.out.print("\n");
 		}
