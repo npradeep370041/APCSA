@@ -9,6 +9,7 @@ public class YahtzeeScoreCard {
 	private int[] score;
 	private int NUMBER_OF_CATEGORIES = 13;
 	private int NUMBER_OF_DICE = 5;
+	private Dice [] sortedDice;
 	/**
 	 *	Get a category score on the score card.
 	 *	@param category		the category number (1 to 13)
@@ -18,6 +19,10 @@ public class YahtzeeScoreCard {
 		score = new int[NUMBER_OF_CATEGORIES];
 		for(int i = 0; i < score.length; i++) {
 			score[i] = -1;
+		}
+		sortedDice = new Dice[NUMBER_OF_DICE];
+		for(int j = 0; j < sortedDice.length; j++) {
+			sortedDice[j] = new Dice();
 		}
 	}
 	public int getScore(int category) {
@@ -92,6 +97,10 @@ public class YahtzeeScoreCard {
 		}
 	}
 	
+	public DiceGroup sort(DiceGroup dg) {
+		
+	}
+	
 	/**
 	 *  Change the scorecard for a number score 1 to 6
 	 *
@@ -157,15 +166,16 @@ public class YahtzeeScoreCard {
 	}
 	
 	public void fullHouse(DiceGroup dg) {
+		score[8]++;
 		
 	}
 	
 	public void smallStraight(DiceGroup dg) {
-							
+		score[9]++;		
 	}
 	
 	public void largeStraight(DiceGroup dg) {
-		
+		score[10]++;
 	}
 	
 	public void chance(DiceGroup dg) {
