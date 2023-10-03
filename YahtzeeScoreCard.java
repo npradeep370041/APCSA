@@ -9,7 +9,7 @@ public class YahtzeeScoreCard {
 	private int[] score;
 	private int NUMBER_OF_CATEGORIES = 13;
 	private int NUMBER_OF_DICE = 5;
-	private Dice [] sortedDice;
+	private int[] sortedDice;
 	/**
 	 *	Get a category score on the score card.
 	 *	@param category		the category number (1 to 13)
@@ -20,9 +20,9 @@ public class YahtzeeScoreCard {
 		for(int i = 0; i < score.length; i++) {
 			score[i] = -1;
 		}
-		sortedDice = new Dice[NUMBER_OF_DICE];
+		sortedDice = new int[NUMBER_OF_DICE];
 		for(int j = 0; j < sortedDice.length; j++) {
-			sortedDice[j] = new Dice();
+			sortedDice[j] = 0;
 		}
 	}
 	public int getScore(int category) {
@@ -98,7 +98,16 @@ public class YahtzeeScoreCard {
 	}
 	
 	public DiceGroup sort(DiceGroup dg) {
-		
+		for(int i = 0; i < NUMBER_OF_DICE; i++) {
+			int smallest = dg.getDie(i).getLastRollValue();
+			for(int j = 0; j < NUMBER_OF_DICE; j++) {
+				if(dg.getDie(j).getLastRollValue() < smallest) {
+					smallest = dg.getDie(j).getLastRollValue();
+				}
+			}
+			sortedDice[i] = smallest;
+		}
+			
 	}
 	
 	/**
