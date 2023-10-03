@@ -9,7 +9,6 @@ public class YahtzeeScoreCard {
 	private int[] score;
 	private int NUMBER_OF_CATEGORIES = 13;
 	private int NUMBER_OF_DICE = 5;
-	private int[] sortedDice;
 	/**
 	 *	Get a category score on the score card.
 	 *	@param category		the category number (1 to 13)
@@ -19,10 +18,6 @@ public class YahtzeeScoreCard {
 		score = new int[NUMBER_OF_CATEGORIES];
 		for(int i = 0; i < score.length; i++) {
 			score[i] = -1;
-		}
-		sortedDice = new int[NUMBER_OF_DICE];
-		for(int j = 0; j < sortedDice.length; j++) {
-			sortedDice[j] = 0;
 		}
 	}
 	public int getScore(int category) {
@@ -97,17 +92,26 @@ public class YahtzeeScoreCard {
 		}
 	}
 	
-	public DiceGroup sort(DiceGroup dg) {
-		for(int i = 0; i < NUMBER_OF_DICE; i++) {
-			int smallest = dg.getDie(i).getLastRollValue();
-			for(int j = 0; j < NUMBER_OF_DICE; j++) {
-				if(dg.getDie(j).getLastRollValue() < smallest) {
-					smallest = dg.getDie(j).getLastRollValue();
+	public int[] sort(DiceGroup dg) {
+		int[] sortedDice = new int[NUMBER_OF_DICE];
+		for(int a = 0; a < sortedDice.length; a++) {
+			sortedDice[a] = dg.getDie(a).getLastRollValue();
+		}
+		boolean swapped = true;
+		int i = 0;
+		while(swapped) {
+			swapped = false;
+			i++;
+			for(int j = 0; j < sortedDice.length; j++) {
+				if(sortedDice[j] > sortedDice[j + 1]) {
+					int temp = sortedDice[j];
+					sortedDice[j] = sortedDice[j + 1];
+					sortedDice[j + 1] = temp;
+					swapped = true;
 				}
 			}
-			sortedDice[i] = smallest;
 		}
-			
+		return sortedDice;	
 	}
 	
 	/**
@@ -118,8 +122,9 @@ public class YahtzeeScoreCard {
 	 */
 	public void numberScore(int choice, DiceGroup dg) {
 		score[choice]++;
+		int[] sortedDice = this.sort(dg);
 		for(int i = 0; i < NUMBER_OF_DICE; i++) {
-			int die = dg.getDie(i);
+			int die = sortedDice[i];
 			if(die == choice) {
 				score[choice] = score[choice] + choice;
 			}
@@ -133,17 +138,11 @@ public class YahtzeeScoreCard {
 	 */	
 	public void threeOfAKind(DiceGroup dg) {
 		score[6]++;
+		int[] sortedDice = this.sort(dg);
 		boolean isThreeOfAKind = false;
-		for(int i = 0; i < NUMBER_OF_DICE; i++) {
-			for(int j = 0; j < NUMBER_OF_DICE; j++) {
-				for(int k = 0; k < NUMBER_OF_DICE; k++) {
-					if(i != j && i != k && j != k) {
-						if(dg.getDie(i) == dg.getDie(j) && dg.getDie(i) == dg.getDie(j) && 
-						   dg.getDie(j) == dg.getDie(k)) {
-							isThreeOfAKind = true;
-						}
-					}
-				}
+		for(int i = 0; i < 3; i++) {
+			if(sortedDice[i] == sortedDice[i + 1] && sortedDice[i] == sortedDice[i + 2]) {
+				isThreeOfAKind = true;
 			}
 		}
 		if(isThreeOfAKind) {
@@ -153,20 +152,12 @@ public class YahtzeeScoreCard {
 	
 	public void fourOfAKind(DiceGroup dg) {
 		score[7]++;
+		int[] sortedDice = this.sort(dg);
 		boolean isFourOfAKind = false;
-		for(int i = 0; i < NUMBER_OF_DICE; i++) {
-			for(int j = 0; j < NUMBER_OF_DICE; j++) {
-				for(int k = 0; k < NUMBER_OF_DICE; k++) {
-					for(int l = 0; l < NUMBER_OF_DICE; l++) {
-						if(i != j && i != k && i != l && j != k && j != l && k != l) {
-							if(dg.getDie(i) == dg.getDie(j) && dg.getDie(i) == dg.getDie(j) && 
-							   dg.getDie(i) == dg.getDie(l) && dg.getDie(j) == dg.getDie(k) && 
-							   dg.getDie(j) == dg.getDie(l) && dg.getDie(k) == dg.getDie(l)) {
-								ifFourOfAKind = true;
-							}
-						}
-					}
-				}
+		for(int i = 0; i < 2; i++) {
+			if(sortedDice[i] == sortedDice[i + 1] && sortedDice[i] == sortedDice[i + 2] &&
+					sortedDice[i] == sortedDice[i + 3]) {
+				isFourOfAKind = true;
 			}
 		}
 		if(isFourOfAKind) {
@@ -176,15 +167,51 @@ public class YahtzeeScoreCard {
 	
 	public void fullHouse(DiceGroup dg) {
 		score[8]++;
-		
+		int[] sortedDice = this.sort(dg);
+		boolean isFullHouse = false;
+		if(sortedDice[0] == sortedDice[2]) {
+			if(sortedDice[0] == sortedDice[1] && sortedDice[0] == sortedDice[2] &&
+					sortedDice[3] == sortedDice[4]) {
+				isFullHouse = true;
+			}
+		}
+		else {
+			if(sortedDice[0] == sortedDice[1] && sortedDice[2] == sortedDice[3] &&
+					sortedDice[2] == sortedDice[4]) {
+				isFullHouse = true;
+			}
+		}
+		if(isFullHouse) {
+			score[8] = 25;
+		}
 	}
 	
 	public void smallStraight(DiceGroup dg) {
-		score[9]++;		
+		score[9]++;
+		int[] sortedDice = this.sort(dg);
+		counter = 0;
+		for(int i = 0; i < sortedDice.length; i++) {
+			if(sortedDice[i] - sortedDice[i + 1] == -1) {
+				counter++;
+			}
+		}
+		if(counter >= 4) {
+			score[9] == 30;
+		}
 	}
 	
 	public void largeStraight(DiceGroup dg) {
 		score[10]++;
+		int[] sortedDice = this.sort(dg);
+		counter = 0;
+		for(int i = 0; i < sortedDice.length; i++) {
+			if(sortedDice[i] - sortedDice[i + 1] == -1) {
+				counter++;
+			}
+		}
+		if(counter >= 5) {
+			score[9] == 40;
+		}
 	}
 	
 	public void chance(DiceGroup dg) {
