@@ -1,3 +1,4 @@
+import java.util.Scanner;
 /**
  *	Introduce the game here
  *
@@ -7,7 +8,6 @@
  
 public class Yahtzee {
 
-	
 	public void printHeader() {
 		System.out.println("\n");
 		System.out.println("+------------------------------------------------------------------------------------+");
@@ -28,5 +28,17 @@ public class Yahtzee {
 		System.out.println("| LET'S PLAY SOME YAHTZEE!                                                           |");
 		System.out.println("+------------------------------------------------------------------------------------+");
 		System.out.println("\n\n");
+	}
+	
+	public static void main(String[] args) {
+		YahtzeePlayer player1 = new YahtzeePlayer;
+		Scanner getPlayer1 = new Scanner(System.in);
+		System.out.println("\nPlayer 1, please enter your first name : ");
+		player1.setName(getPlayer1.nextLine());
+		YahtzeePlayer player2 = new YahtzeePlayer;
+		Scanner getPlayer2 = new Scanner(System.in);
+		System.out.println("\nPlayer 2, please enter your first name : ");
+		player2.setName(getPlayer2.nextLine());
+		 
 	}
 }
