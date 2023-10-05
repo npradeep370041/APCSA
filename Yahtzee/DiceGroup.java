@@ -24,9 +24,9 @@ public class DiceGroup {
 	 */
 	public DiceGroup() {
 		// you complete
-		dice = new Dice[NUMBER_OF_DICE];
+		die = new Dice[NUMBER_OF_DICE];
 		for(int i = 0; i < die.length; i++) {
-			die[i] = new Dice;
+			die[i] = new Dice();
 		}
 	}
 		
@@ -47,20 +47,20 @@ public class DiceGroup {
 	 */
 	public void rollDice(String rawHold) {
 		// you complete
-		if(rawHold.contains("1")) {
+		if(!rawHold.contains("1")) {
+			die[0].roll();
+		}
+		if(!rawHold.contains("2")) {
 			die[1].roll();
 		}
-		if(rawHold.contains("2")) {
+		if(!rawHold.contains("3")) {
 			die[2].roll();
 		}
-		if(rawHold.contains("3")) {
+		if(!rawHold.contains("4")) {
 			die[3].roll();
 		}
-		if(rawHold.contains("4")) {
+		if(!rawHold.contains("5")) {
 			die[4].roll();
-		}
-		if(rawHold.contains("5")) {
-			die[5].roll();
 		}
 	}
 	
