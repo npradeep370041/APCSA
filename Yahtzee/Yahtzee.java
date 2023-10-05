@@ -253,6 +253,7 @@ public class Yahtzee {
 	 */
 	public static void main(String[] args) {
 		Yahtzee yahtzee = new Yahtzee();
+		yahtzee.printHeader();
 		yahtzee.startGame();
 		yahtzee.play();
 		yahtzee.determineWinner();
