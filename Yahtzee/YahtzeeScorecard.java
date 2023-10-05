@@ -9,10 +9,9 @@ public class YahtzeeScoreCard {
 	private int[] score;
 	private int NUMBER_OF_CATEGORIES = 13;
 	private int NUMBER_OF_DICE = 5;
+	
 	/**
-	 *	Get a category score on the score card.
-	 *	@param category		the category number (1 to 13)
-	 *	@return				the score of that category
+	 * Initializes an array that keeps track of score for each category
 	 */
 	public YahtzeeScoreCard() {
 		score = new int[NUMBER_OF_CATEGORIES];
@@ -20,6 +19,11 @@ public class YahtzeeScoreCard {
 			score[i] = -1;
 		}
 	}
+	/**
+	 *	Get a category score on the score card.
+	 *	@param category		the category number (1 to 13)
+	 *	@return				the score of that category
+	 */
 	public int getScore(int category) {
 		return score[category - 1];
 	}
@@ -92,6 +96,11 @@ public class YahtzeeScoreCard {
 		}
 	}
 	
+	/**
+	 * Sorts the dice in order from least to greatest
+	 * @param dg  The dicegroup to sort
+	 * @return 	  The array of sorted dice
+	 */
 	public int[] sort(DiceGroup dg) {
 		int[] sortedDice = new int[NUMBER_OF_DICE];
 		for(int a = 0; a < sortedDice.length; a++) {
@@ -102,7 +111,7 @@ public class YahtzeeScoreCard {
 		while(swapped) {
 			swapped = false;
 			i++;
-			for(int j = 0; j < sortedDice.length; j++) {
+			for(int j = 0; j < sortedDice.length - 1; j++) {
 				if(sortedDice[j] > sortedDice[j + 1]) {
 					int temp = sortedDice[j];
 					sortedDice[j] = sortedDice[j + 1];
@@ -121,19 +130,18 @@ public class YahtzeeScoreCard {
 	 *  @param dg  The DiceGroup to score
 	 */
 	public void numberScore(int choice, DiceGroup dg) {
-		score[choice]++;
+		score[choice - 1]++;
 		int[] sortedDice = this.sort(dg);
 		for(int i = 0; i < NUMBER_OF_DICE; i++) {
 			int die = sortedDice[i];
 			if(die == choice) {
-				score[choice] = score[choice] + choice;
+				score[choice - 1] = score[choice - 1] + choice;
 			}
 		}
 	}
 	
 	/**
 	 *	Updates the scorecard for Three Of A Kind choice.
-	 *
 	 *	@param dg	The DiceGroup to score
 	 */	
 	public void threeOfAKind(DiceGroup dg) {
@@ -150,6 +158,10 @@ public class YahtzeeScoreCard {
 		}
 	}
 	
+	/**
+	 *	Updates the scorecard for Four Of A Kind choice.
+	 *	@param dg	The DiceGroup to score
+	 */
 	public void fourOfAKind(DiceGroup dg) {
 		score[7]++;
 		int[] sortedDice = this.sort(dg);
@@ -165,6 +177,10 @@ public class YahtzeeScoreCard {
 		}
 	}
 	
+	/**
+	 *	Updates the scorecard for Full House choice.
+	 *	@param dg	The DiceGroup to score
+	 */
 	public void fullHouse(DiceGroup dg) {
 		score[8]++;
 		int[] sortedDice = this.sort(dg);
@@ -186,42 +202,60 @@ public class YahtzeeScoreCard {
 		}
 	}
 	
+	/**
+	 *	Updates the scorecard for Small Straight choice.
+	 *	@param dg	The DiceGroup to score
+	 */
 	public void smallStraight(DiceGroup dg) {
 		score[9]++;
 		int[] sortedDice = this.sort(dg);
-		counter = 0;
-		for(int i = 0; i < sortedDice.length; i++) {
+		int counter = 0;
+		for(int i = 0; i < sortedDice.length - 1; i++) {
+			if(sortedDice[i] - sortedDice[i + 1] == -1) {
+				counter++;
+			}
+		}
+		if(counter >= 3) {
+			score[9] = 30;
+		}
+	}
+	
+	/**
+	 *	Updates the scorecard for Large Straight choice.
+	 *	@param dg	The DiceGroup to score
+	 */
+	public void largeStraight(DiceGroup dg) {
+		score[10]++;
+		int[] sortedDice = this.sort(dg);
+		int counter = 0;
+		for(int i = 0; i < sortedDice.length - 1; i++) {
 			if(sortedDice[i] - sortedDice[i + 1] == -1) {
 				counter++;
 			}
 		}
 		if(counter >= 4) {
-			score[9] == 30;
+			score[10] = 40;
 		}
 	}
 	
-	public void largeStraight(DiceGroup dg) {
-		score[10]++;
-		int[] sortedDice = this.sort(dg);
-		counter = 0;
-		for(int i = 0; i < sortedDice.length; i++) {
-			if(sortedDice[i] - sortedDice[i + 1] == -1) {
-				counter++;
-			}
-		}
-		if(counter >= 5) {
-			score[9] == 40;
-		}
-	}
-	
+	/**
+	 *	Updates the scorecard for Chance choice.
+	 *	@param dg	The DiceGroup to score
+	 */
 	public void chance(DiceGroup dg) {
 		score[11] = dg.getTotal();
 	}
 	
+	/**
+	 *	Updates the scorecard for Yahtzee choice.
+	 *	@param dg	The DiceGroup to score
+	 */
 	public void yahtzeeScore(DiceGroup dg) {
-		if(dg.getDie(0) == dg.getDie(1) && dg.getDie(0) == dg.getDie(2) &&
-		   dg.getDie(0) == dg.getDie(3) && dg.getDie(0) == dg.getDie(4)) {
-			
+		score[12]++;
+		int[] sortedDice = this.sort(dg);
+		if(sortedDice[0] == sortedDice[1] && sortedDice[0] == sortedDice[2] &&
+				sortedDice[0] == sortedDice[3] && sortedDice[0] == sortedDice[4]) {
+			score[12] = 50;
 		}
 	}
 
