@@ -84,7 +84,7 @@ public class Wordle
 		letters = "";
 		readyForKeyInput = activeGame = true;
 		readyForMouseInput = false;
-		keyBoardColors = new int[29];
+		keyBoardColors = new int[30];
 		word = openFileAndChooseWord(WORDS5, testWord);		
 	}
 
@@ -267,6 +267,22 @@ public class Wordle
 			{
 				if(wordGuess[row].length() != 0)											//  THIS METHOD IS INCOMPLETE.
 				{
+					if(word.charAt(col) == wordGuess[row].charAt(col)) {
+						keyBoardColors[5 * row + col] = 3;
+					}
+					if(keyBoardColors[5 * row + col] != 3) {
+						for(int i = 0; i < 5; i++) {
+							if(keyBoardColors[5 * row + i] != 3) {
+								if(col + i <= 5) {
+									if(wordGuess[row].charAt(col) == word.charAt(col + i)) {
+										
+									}
+								}
+							}
+						}
+					}
+								
+						
 					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameDarkGray.png");
 				}
 				else
@@ -357,6 +373,25 @@ public class Wordle
 		{
 			if(wordGuess[i].length() == 5)
 			{
+				
+			{
+		}
+	}
+	private int [] keyBoardColors;						
+	
+	/** 
+	 *	Creates a Wordle object.  A constructor.  Initializes all of the variables by 
+	 *	calling the method initAll.
+	 *	@param testWord		if this String is found in words5allowed.txt, it will
+	 *						be used to set word.
+	 *	This method is complete.
+	 */
+	public Wordle(String showIt, String testWord)
+	{
+		show = false;
+		if (showIt.equalsIgnoreCase("show"))
+			show = true;
+		
 				lastWord = wordGuess[i];
 			}
 		}
