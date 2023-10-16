@@ -229,7 +229,7 @@ public class Wordle
 		boolean hasWord = false;
 		while(file.hasNext()) {
 			String checkWord = file.nextLine();
-			if(checkWord.equals(letters.toLowerCase()) {
+			if(checkWord.equals(letters.toLowerCase())) {
 				wordGuess[guessNumber] = letters;
 				hasWord = true;
 			}
@@ -240,6 +240,7 @@ public class Wordle
 			JDialog d = pane.createDialog("INVALID INPUT");
 			d.setLocation(365, 250);
 			d.setVisible(true);
+		}
 	}
 	
 	/** 
