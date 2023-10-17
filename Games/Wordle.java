@@ -269,24 +269,26 @@ public class Wordle
 				{
 					if(word.charAt(col) == wordGuess[row].charAt(col)) {
 						keyBoardColors[5 * row + col] = 3;
+						StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameGreen.png");
 					}
-					if(keyBoardColors[5 * row + col] != 3) {
+					else if(keyBoardColors[5 * row + col] != 3) {
 						for(int i = 0; i < 5; i++) {
 							if(keyBoardColors[5 * row + i] != 3) {
 								if(col + i <= 5) {
 									if(wordGuess[row].charAt(col) == word.charAt(col + i)) {
-										
+										keyBoardColors[5 * row + col] = 2;
+										StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameYellow.png");
 									}
 								}
 							}
 						}
 					}
-								
-						
-					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameDarkGray.png");
+					else {
+						keyBoardColors[5 * row + col] = 1;
+						StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameDarkGray.png");
+					}
 				}
-				else
-				{
+				else {
 					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrame.png");
 				}
 			}
@@ -373,29 +375,10 @@ public class Wordle
 		{
 			if(wordGuess[i].length() == 5)
 			{
-				
-			{
-		}
-	}
-	private int [] keyBoardColors;						
-	
-	/** 
-	 *	Creates a Wordle object.  A constructor.  Initializes all of the variables by 
-	 *	calling the method initAll.
-	 *	@param testWord		if this String is found in words5allowed.txt, it will
-	 *						be used to set word.
-	 *	This method is complete.
-	 */
-	public Wordle(String showIt, String testWord)
-	{
-		show = false;
-		if (showIt.equalsIgnoreCase("show"))
-			show = true;
-		
 				lastWord = wordGuess[i];
 			}
 		}
-		
+
 		// declare the winner by matching the word
 		if(lastWord.equals(word))
 		{
