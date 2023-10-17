@@ -97,7 +97,7 @@ public class Wordle
 	public static void main(String[] args)
 	{
 		String testWord = new String("");
-		String showIt = new String("");
+		String showIt = args[1];
 
 		// Determines if args[0] and args[1] are set
 		// args[0] is "show" which means to show the word chosen
@@ -108,6 +108,10 @@ public class Wordle
 
 		Wordle run = new Wordle(showIt, testWord);
 		run.setUpCanvas();
+		word = run.openFileAndChooseWord(WORDS5, showIt);
+		if(word.equals(showIt)) {
+			System.out.println(showIt.toUpperCase());
+		}
 		run.playGame();
 	}
 
@@ -158,6 +162,7 @@ public class Wordle
 	 */
 	public String openFileAndChooseWord(String inFileName, String testWord)
 	{
+		String result = "";
 		int numberOfLines = 1;
 		Scanner lineCounter = FileUtils.openToRead(inFileName);
 		boolean continueChecking = true;
@@ -175,7 +180,7 @@ public class Wordle
 			for(int i = 1; i < randomNumber; i++) {
 				file.nextLine();
 			}
-			String result = file.nextLine();
+			result = file.nextLine();
 		}
 		return result;
 	}
@@ -390,7 +395,7 @@ public class Wordle
 		}
 		
 		// else if all guesses are filled then declare loser
-		else if() {
+		else if(!wordGuess[5].equals(word)) {
 			activeGame = false;
 			JOptionPane pane = new JOptionPane(word + " was the word/ Press RESET to begin again");
 			JDialog d = pane.createDialog(null, "Sorry!");
