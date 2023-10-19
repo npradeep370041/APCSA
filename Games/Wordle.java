@@ -97,19 +97,23 @@ public class Wordle
 	public static void main(String[] args)
 	{
 		String testWord = new String("");
-		String showIt = args[1];
+		String showIt = new String("");
 
 		// Determines if args[0] and args[1] are set
 		// args[0] is "show" which means to show the word chosen
 		// args[1] is a word which is used as the chosen word
-
+		if(args.length == 2) {
+			showIt = args[0];
+			testWord = args[1];
+		}
+			
 
 
 
 		Wordle run = new Wordle(showIt, testWord);
 		run.setUpCanvas();
-		word = run.openFileAndChooseWord(WORDS5, showIt);
-		if(word.equals(showIt)) {
+		run.word = run.openFileAndChooseWord(run.WORDS5, showIt);
+		if(run.word.equals(showIt)) {
 			System.out.println(showIt.toUpperCase());
 		}
 		run.playGame();
@@ -180,7 +184,10 @@ public class Wordle
 			for(int i = 1; i < randomNumber; i++) {
 				file.nextLine();
 			}
-			result = file.nextLine();
+			result = file.next();
+			if(file.hasNextLine()) {
+				file.nextLine();
+			}
 		}
 		return result;
 	}
