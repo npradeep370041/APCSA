@@ -79,7 +79,7 @@ public class Wordle
 		wordGuess = new String[6];
 		for(int i = 0; i < wordGuess.length; i++)
 		{
-			wordGuess[i] = new String("");
+			wordGuess[i] = "";
 		}
 		letters = "";
 		readyForKeyInput = activeGame = true;
@@ -251,45 +251,43 @@ public class Wordle
 		
 		for(int row = 0; row < 6; row++)
 		{
-			for(int col = 0; col < 5; col++)
-			{
-				int[] letterColors = {0, 0, 0, 0, 0};
-				if(wordGuess[row].length() == 5)											//  THIS METHOD IS INCOMPLETE.
-				{
-					if(word.charAt(col) == wordGuess[row].charAt(col)) {
-						letterColors[col] = 3;
+			int[] checked = new int[5];
+			for(int i = 0; i < checked.length; i++) {
+				checked[i] = 0;
+			}
+			if(wordGuess[row].length() == 5) {
+				for(int col = 0; col < 5; col++) {
+					if(wordGuess[row].charAt(col) == word.charAt(col)) {
+						checked[col] = 3;
 					}
-					else if(letterColors[col] != 3) {
-						for(int i = 0; i < 5; i++) {
-							if(col + i < 5) {
-								if(wordGuess[row].charAt(col) == word.charAt(col + i)) {
-									letterColors[col] = 2;
-								}
-							}
-							
+				}
+				for(int col2 = 0; col2 < 5; col2++) {
+					char c = wordGuess[row].charAt(col2);
+					for(int col3 = 0; col3 < 5; col3++) {
+						if(c == word.charAt(col3)) {
+							checked[col2] = 2;
 						}
 					}
-					else {
-						letterColors[col] = 1;
+				}
+				for(int col4 = 0; col4 < 5; col4++) {
+					if(checked[col4] == 0) {
+						checked[col4] = 1;
 					}
 				}
-				else {
-					letterColors[col] = 0;
+			}
+			for(int col5 = 0; col5 < 5; col5++) {
+				if(wordGuess[row].length() != 0 && checked[col5] == 3) {
+					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrameGreen.png");
 				}
-				
-				if(wordGuess[row].length() != 0 && letterColors[col] == 3) {
-					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameGreen.png");
+				else if(wordGuess[row].length() != 0 && checked[col5] == 2) {
+					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrameYellow.png");
 				}
-				else if(wordGuess[row].length() != 0 && letterColors[col] == 2) {
-					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameYellow.png");
-				}
-				else if(wordGuess[row].length() != 0 && letterColors[col] == 1) {
-					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameDarkGray.png");
+				else if(wordGuess[row].length() != 0 && checked[col5] == 1) {
+					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrameDarkGray.png");
 				}
 				else {
-					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrame.png");
+					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrame.png");
 				}
-				
 			}
 		}
 		
