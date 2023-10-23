@@ -32,7 +32,7 @@ public class WordUtils
 		Scanner lineChecker = FileUtils.openToRead(WORD_FILE);
 		numLines = 0;
 		while(lineChecker.hasNext()) {
-			input.next();
+			lineChecker.next();
 			numLines++;
 		}
 		Scanner input = FileUtils.openToRead(WORD_FILE);
@@ -49,11 +49,23 @@ public class WordUtils
 	 */
 	public String [] findAllWords (String letters)
 	{		
+		int counter = 0;
+		String[] checked = new String[numLines];
 		for(int i = 0; i < numLines; i++) {
-			if(isWordMatch(words[i], letters) {
-				
+			if(isWordMatch(words[i], letters)) {
+				checked[i] = words[i];
+				counter++;
 			}
 		}
+		String[] allWords = new String[counter];
+		counter = 0;
+		for(int j = 0; j < numLines; j++) {
+			if(checked[j] != null) {
+				allWords[counter] = checked[j];
+				counter++;
+			}
+		}
+		return allWords;
 	}
 	
 	public boolean isWordMatch (String word, String letters) {
