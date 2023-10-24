@@ -35,6 +35,7 @@ public class WordUtils
 			lineChecker.next();
 			numLines++;
 		}
+		words = new String[numLines];
 		Scanner input = FileUtils.openToRead(WORD_FILE);
 		int i = 0;
 		while(input.hasNext()) {
@@ -49,6 +50,7 @@ public class WordUtils
 	 */
 	public String [] findAllWords (String letters)
 	{		
+		this.loadWords();
 		int counter = 0;
 		String[] checked = new String[numLines];
 		for(int i = 0; i < numLines; i++) {
@@ -84,7 +86,17 @@ public class WordUtils
 	 *  @param words	array containing the words to be printed
 	 */
 	public void printWords (String [] wordList) { 
-		
+		int columnNumber = 1;
+		for(int i = 0; i < wordList.length; i++) {
+			if(columnNumber == 1) {
+				System.out.println();
+			}
+			System.out.printf("%-15s", wordList[i]);
+			columnNumber++;
+			if(columnNumber > 5) { 
+				columnNumber = 1;
+			}
+		}
 	}
 	
 	/**	Finds the highest scoring word according to a score table.
@@ -95,7 +107,16 @@ public class WordUtils
 	 */
 	public String bestWord (String [] wordList, int [] scoreTable)
 	{
-		return "";
+		int index = 0;
+		int highestScore = 0;
+		for(int i = 0; i < wordList.length; i++) {
+			int score = this.getScore(wordList[i], scoreTable);
+			if(score > highestScore) {
+				highestScore = score;
+				index = i;
+			}
+		}
+		return wordList[index];
 	}
 	
 	/**	Calculates the score of one word according to a score table.
@@ -106,7 +127,15 @@ public class WordUtils
 	 */
 	public int getScore (String word, int [] scoreTable)
 	{
-		return 0;
+		int score = 0;
+		for(int i = 0; i < scoreTable.length; i++) {
+			for(int j = 0; j < word.length(); j++) {
+				if((int)word.charAt(j) - 97 == i) {
+					score += scoreTable[i];
+				}
+			}
+		}
+		return score;
 	}
 	
 	/***************************************************************/
@@ -131,3 +160,4 @@ public class WordUtils
 							+ getScore(best, scoreTable) + "\n");
 	}
 }
+
