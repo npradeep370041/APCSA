@@ -251,10 +251,7 @@ public class Wordle
 		
 		for(int row = 0; row < 6; row++)
 		{
-			int[] checked = new int[5];
-			for(int i = 0; i < checked.length; i++) {
-				checked[i] = 0;
-			}
+			int[] checked = {0, 0, 0, 0, 0};
 			if(wordGuess[row].length() == 5) {
 				for(int col = 0; col < 5; col++) {
 					if(wordGuess[row].charAt(col) == word.charAt(col)) {
@@ -265,7 +262,9 @@ public class Wordle
 					char c = wordGuess[row].charAt(col2);
 					for(int col3 = 0; col3 < 5; col3++) {
 						if(c == word.charAt(col3)) {
-							checked[col2] = 2;
+							if(checked[col2] == 0) {
+								checked[col2] = 2;
+							}
 						}
 					}
 				}
@@ -276,13 +275,13 @@ public class Wordle
 				}
 			}
 			for(int col5 = 0; col5 < 5; col5++) {
-				if(wordGuess[row].length() != 0 && checked[col5] == 3) {
+				if(checked[col5] == 3) {
 					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrameGreen.png");
 				}
-				else if(wordGuess[row].length() != 0 && checked[col5] == 2) {
+				else if(checked[col5] == 2) {
 					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrameYellow.png");
 				}
-				else if(wordGuess[row].length() != 0 && checked[col5] == 1) {
+				else if(checked[col5] == 1) {
 					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrameDarkGray.png");
 				}
 				else {
