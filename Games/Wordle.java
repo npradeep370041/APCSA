@@ -159,11 +159,12 @@ public class Wordle
 	 */
 	public String openFileAndChooseWord(String inFileName, String testWord)
 	{
+		testWord.toUpperCase();
 		Scanner lineCounter = FileUtils.openToRead(inFileName);
 		int numberOfLines = 0;
-		while(lineCounter.hasNextLine()) {
+		while(lineCounter.hasNext()) {
 			numberOfLines++;
-			lineCounter.nextLine();
+			lineCounter.next();
 		}
 		if(!this.inAllowedWordFile(testWord)) {
 			Scanner wordGetter = FileUtils.openToRead(inFileName);
@@ -174,7 +175,7 @@ public class Wordle
 				counter++;
 			}
 			int lineNumber = (int)(Math.random() * numberOfLines);
-			testWord = allWords[lineNumber];
+			testWord = allWords[lineNumber].toUpperCase();
 		}
 		if(show) {
 			System.out.println(testWord.toUpperCase());
@@ -251,41 +252,47 @@ public class Wordle
 		
 		for(int row = 0; row < 6; row++)
 		{
-			int[] checked = {0, 0, 0, 0, 0};
+			int[] checker = {0, 0, 0, 0, 0};
 			if(wordGuess[row].length() == 5) {
-				for(int col = 0; col < 5; col++) {
-					if(wordGuess[row].charAt(col) == word.charAt(col)) {
-						checked[col] = 3;
+				for(int i = 0; i < 5; i++) {
+					if(wordGuess[row].charAt(i) == word.charAt(i)) {
+						checker[i] = 3;
 					}
 				}
-				for(int col2 = 0; col2 < 5; col2++) {
-					char c = wordGuess[row].charAt(col2);
-					for(int col3 = 0; col3 < 5; col3++) {
-						if(c == word.charAt(col3)) {
-							if(checked[col2] == 0) {
-								checked[col2] = 2;
-							}
+				for(int j = 0; j < 5; j++) {
+					char c = wordGuess[row].charAt(j);
+					for(int k = 0; k < 5; k++) {
+						if(checker[j] == 0 && checker[k] == 0 && c == word.charAt(k)) {
+							checker[j] = 2;
 						}
 					}
 				}
-				for(int col4 = 0; col4 < 5; col4++) {
-					if(checked[col4] == 0) {
-						checked[col4] = 1;
+				for(int l = 0; l < 5; l++) {
+					if(checker[l] == 0) {
+						checker[l] = 1;
+					}
+				}
+				for(int m = 0; m < 5; m++) {
+					char c2 = wordGuess[row].charAt(m);
+					for(int n = 0; n < Constants.KEYBOARD.length; n++) {
+						if(keyBoardColors[n] < checker[m] && Constants.KEYBOARD[n].charAt(0) == c2) {
+							keyBoardColors[n] = checker[m];
+						}
 					}
 				}
 			}
-			for(int col5 = 0; col5 < 5; col5++) {
-				if(checked[col5] == 3) {
-					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrameGreen.png");
+			for(int col = 0; col < 5; col++) {
+				if(checker[col] == 1) {
+					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameDarkGray.png");
 				}
-				else if(checked[col5] == 2) {
-					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrameYellow.png");
+				else if(checker[col] == 2) {
+					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameYellow.png");
 				}
-				else if(checked[col5] == 1) {
-					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrameDarkGray.png");
+				else if(checker[col] == 3) {
+					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameGreen.png");
 				}
 				else {
-					StdDraw.picture(209 + col5 * 68, 650 - row * 68, "letterFrame.png");
+					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrame.png");
 				}
 			}
 		}
