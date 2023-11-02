@@ -41,17 +41,48 @@ public class HTMLUtilities {
 				if(str.charAt(i) == ' ') {
 					resultIndex++;
 				}
-				if(this.isPunctuation(str.charAt(i)) != 0) {
+				else if(this.isPunctuation(str.charAt(i)) == 1) {
 					resultIndex++;
+					if(i != 0 && i != str.length() - 1 && str.charAt(i - 1) == ' ' && str.charAt(i + 1) == ' ') {
+						resultIndex--;
+					}
 					result[resultIndex] = "" + str.charAt(i);
-					resultIndex++;
 				}
-				if(str.charAt(i) != ' ' && !this.isPunctuation(str.charAt(i))) {
-					if(result[resultIndex] == null) {
-						result[resultIndex] = "" + str.charAt(i);
+				else {
+					if(this.isPunctuation(str.charAt(i)) == 2) {
+						if(i != 0 && i != str.length() - 1 && Character.isLetter(str.charAt(i - 1)) && Character.isLetter(str.charAt(i + 1))) {
+							result[resultIndex] += "" + str.charAt(i);
+						}
+						else if(i != str.length() - 1 && Character.isDigit(str.charAt(i + 1))) {
+							result[resultIndex] = "" + str.charAt(i);
+						}
+						else {
+							resultIndex++;
+							if(i != 0 && i != str.length() - 1 && str.charAt(i - 1) == ' ' && str.charAt(i + 1) == ' ') {
+								resultIndex--;
+							}
+							result[resultIndex] = "" + str.charAt(i);
+						}
+					}
+					else if(this.isPunctuation(str.charAt(i)) == 3) {
+						if(i != 0 && i != str.length() - 1 && Character.isDigit(str.charAt(i + 1))) {
+							result[resultIndex] += "" + str.charAt(i);
+						}
+						else {
+							resultIndex++;
+							if(i != 0 && i != str.length() - 1 && str.charAt(i - 1) == ' ' && str.charAt(i + 1) == ' ') {
+								resultIndex--;
+							}
+							result[resultIndex] = "" + str.charAt(i);
+						}
 					}
 					else {
-						result[resultIndex] += str.charAt(i);
+						if(result[resultIndex] == null) {
+							result[resultIndex] = "" + str.charAt(i);
+						}
+						else {
+							result[resultIndex] += str.charAt(i);
+						}
 					}
 				}
 			}
@@ -71,12 +102,20 @@ public class HTMLUtilities {
 		return trueResult;
 	}
 
-	public int isPunctuation(char c) {
+	/**
+	 * Checks if the given character is punctuation
+	 * @param   c  The character that is being checked
+	 * @return  0 if not punctuation, 2 is dash, 3 if period, 1 if anything else
+	 */
+	private int isPunctuation(char c) {
 		char[] punctuations = {'.', ',', ';', ':', '(', ')', '?', '!', '=', '&', '~', '+', '-'};
 		for(int i = 0; i < punctuations.length; i++) {
-			else if(c == punctuations[i]) {
+			if(c == punctuations[i]) {
 				if(i == punctuations.length - 1) {
 					return 2;
+				}
+				else if(i == 0) {
+					return 3;
 				}
 				else {
 					return 1;
