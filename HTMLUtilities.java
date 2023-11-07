@@ -50,7 +50,7 @@ public class HTMLUtilities {
 				}
 				else {
 					if(this.isPunctuation(str.charAt(i)) == 2) {
-						if(i != 0 && i != str.length() - 1 && Character.isLetter(str.charAt(i - 1)) && Character.isLetter(str.charAt(i + 1))) {
+						if(i != 0 && i != str.length() - 1 && Character.isLetter(str.charAt(i - 1)) && (Character.isLetter(str.charAt(i + 1)) || str.charAt(i + 1) == 'e')) {
 							result[resultIndex] += "" + str.charAt(i);
 						}
 						else if(i != str.length() - 1 && Character.isDigit(str.charAt(i + 1))) {
