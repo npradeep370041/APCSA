@@ -20,26 +20,39 @@ public class HTMLUtilities {
 		int i = 0;
 		int resultIndex = 0;
 		boolean isInsideAngledBrackets = false;
+		boolean isComment = false;
+		boolean isPreFormatted = false;
 		while(i < str.length()) {
 			if(str.charAt(i) == '<') {
 				isInsideAngledBrackets = true;
 			}
 			if(isInsideAngledBrackets) {
-				if(result[resultIndex] == null) {
-					result[resultIndex] = "" + str.charAt(i);
+				if(str.charAt(i + 1) == '!' && str.charAt(i + 2) == '-' && str.charAt(i + 3) == '-') {
+					isComment = true;
+					i += 4;
+					isInsideAngledBrackets = false;
 				}
 				else {
-					result[resultIndex] += str.charAt(i);
+					if(result[resultIndex] == null) {
+						result[resultIndex] = "" + str.charAt(i);
+					}
+					else {
+						result[resultIndex] += str.charAt(i);
+					}
+					if(str.charAt(i) == '>') {
+						isInsideAngledBrackets = false;
+						resultIndex++;
+					}
 				}
-				if(str.charAt(i) == '>') {
-					isInsideAngledBrackets = false;
-					resultIndex++;
-				}
+			}
+			if(isComment) {
 				
 			}
 			else {
-				if(str.charAt(i) == ' ') {
-					resultIndex++;
+				if((str.charAt(i) == ' ' || str.charAt(i) == '\t')) {
+					if(str.charAt(i + 1) != ' ' && str.charAt(i + 1) != '\t') {
+						resultIndex++;
+					}
 				}
 				else if(this.isPunctuation(str.charAt(i)) == 1) {
 					resultIndex++;
