@@ -23,71 +23,15 @@ public class HTMLUtilities {
 		boolean isComment = false;
 		boolean isPreFormatted = false;
 		while(i < str.length()) {
-			if(str.charAt(i) == '<') {
-				isInsideAngledBrackets = true;
-			}
-			if(isInsideAngledBrackets) {
-				if(str.charAt(i + 1) == '!' && str.charAt(i + 2) == '-' && str.charAt(i + 3) == '-') {
-					isComment = true;
-					i += 4;
-					isInsideAngledBrackets = false;
+			if(!isComment) {	
+				if(str.charAt(i) == '<') {
+					isInsideAngledBrackets = true;
 				}
-				else {
-					if(result[resultIndex] == null) {
-						result[resultIndex] = "" + str.charAt(i);
-					}
-					else {
-						result[resultIndex] += str.charAt(i);
-					}
-					if(str.charAt(i) == '>') {
+				if(isInsideAngledBrackets) {
+					if((i + 1) < str.length() && (i + 2) < str.length() && (i + 3) < str.length() && str.charAt(i + 1) == '!' && str.charAt(i + 2) == '-' && str.charAt(i + 3) == '-') {
+						isComment = true;
+						i += 3;
 						isInsideAngledBrackets = false;
-						resultIndex++;
-					}
-				}
-			}
-			if(isComment) {
-				
-			}
-			else {
-				if((str.charAt(i) == ' ' || str.charAt(i) == '\t')) {
-					if(str.charAt(i + 1) != ' ' && str.charAt(i + 1) != '\t') {
-						resultIndex++;
-					}
-				}
-				else if(this.isPunctuation(str.charAt(i)) == 1) {
-					resultIndex++;
-					if(i != 0 && i != str.length() - 1 && str.charAt(i - 1) == ' ' && str.charAt(i + 1) == ' ') {
-						resultIndex--;
-					}
-					result[resultIndex] = "" + str.charAt(i);
-				}
-				else {
-					if(this.isPunctuation(str.charAt(i)) == 2) {
-						if(i != 0 && i != str.length() - 1 && Character.isLetter(str.charAt(i - 1)) && (Character.isLetter(str.charAt(i + 1)) || str.charAt(i + 1) == 'e')) {
-							result[resultIndex] += "" + str.charAt(i);
-						}
-						else if(i != str.length() - 1 && Character.isDigit(str.charAt(i + 1))) {
-							result[resultIndex] = "" + str.charAt(i);
-						}
-						else {
-							resultIndex++;
-							if(i != 0 && i != str.length() - 1 && str.charAt(i - 1) == ' ' && str.charAt(i + 1) == ' ') {
-								resultIndex--;
-							}
-							result[resultIndex] = "" + str.charAt(i);
-						}
-					}
-					else if(this.isPunctuation(str.charAt(i)) == 3) {
-						if(i != 0 && i != str.length() - 1 && Character.isDigit(str.charAt(i + 1))) {
-							result[resultIndex] += "" + str.charAt(i);
-						}
-						else {
-							resultIndex++;
-							if(i != 0 && i != str.length() - 1 && str.charAt(i - 1) == ' ' && str.charAt(i + 1) == ' ') {
-								resultIndex--;
-							}
-							result[resultIndex] = "" + str.charAt(i);
-						}
 					}
 					else {
 						if(result[resultIndex] == null) {
@@ -96,10 +40,72 @@ public class HTMLUtilities {
 						else {
 							result[resultIndex] += str.charAt(i);
 						}
+						if(str.charAt(i) == '>') {
+							isInsideAngledBrackets = false;
+							resultIndex++;
+						}
 					}
 				}
+				else {
+					if((str.charAt(i) == ' ' || str.charAt(i) == '\t')) {
+						if((i + 1) < str.length() && str.charAt(i + 1) != ' ' && str.charAt(i + 1) != '\t') {
+							resultIndex++;
+						}
+					}
+					else if(this.isPunctuation(str.charAt(i)) == 1) {
+						resultIndex++;
+						if(i != 0 && i != str.length() - 1 && str.charAt(i - 1) == ' ' && str.charAt(i + 1) == ' ') {
+							resultIndex--;
+						}
+						result[resultIndex] = "" + str.charAt(i);
+					}
+					else {
+						if(this.isPunctuation(str.charAt(i)) == 2) {
+							if(i != 0 && i != str.length() - 1 && Character.isLetter(str.charAt(i - 1)) && (Character.isLetter(str.charAt(i + 1)) || str.charAt(i + 1) == 'e')) {
+								result[resultIndex] += "" + str.charAt(i);
+							}
+							else if(i != str.length() - 1 && Character.isDigit(str.charAt(i + 1))) {
+								result[resultIndex] = "" + str.charAt(i);
+							}
+							else {
+								resultIndex++;
+								if(i != 0 && i != str.length() - 1 && str.charAt(i - 1) == ' ' && str.charAt(i + 1) == ' ') {
+									resultIndex--;
+								}
+								result[resultIndex] = "" + str.charAt(i);
+							}
+						}
+						else if(this.isPunctuation(str.charAt(i)) == 3) {
+							if(i != 0 && i != str.length() - 1 && Character.isDigit(str.charAt(i + 1))) {
+								result[resultIndex] += "" + str.charAt(i);
+							}
+							else {
+								resultIndex++;
+								if(i != 0 && i != str.length() - 1 && str.charAt(i - 1) == ' ' && str.charAt(i + 1) == ' ') {
+									resultIndex--;
+								}
+								result[resultIndex] = "" + str.charAt(i);
+							}
+						}
+						else {
+							if(result[resultIndex] == null) {
+								result[resultIndex] = "" + str.charAt(i);
+							}
+							else {
+								result[resultIndex] += str.charAt(i);
+							}
+						}
+					}
+				}
+				i++;
 			}
-			i++;			
+			else {
+				if((i + 1) < str.length() && (i + 2) < str.length() && str.charAt(i) == '-' && str.charAt(i + 1) == '-' && str.charAt(i + 2) == '>') {
+					isComment = false;
+					i += 2;
+				}
+				i++;
+			}		
 		}
 		int correctIndex = 0;
 		for(int j = 0; j < result.length; j++) {
