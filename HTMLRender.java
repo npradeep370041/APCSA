@@ -101,7 +101,42 @@ public class HTMLRender {
 				if(tokens[i].trim().equalsIgnoreCase("<p>")) {
 					isParagraph = true;
 				}
-				if(tokens[i].trim().equalsIgnoreCase("
+				if(tokens[i].trim().equalsIgnoreCase("<q>")) {
+					tState = textState.QUOTED;
+					length = maxLineLength.L80;
+				}
+				else if(tokens[i].trim().equalsIgnoreCase("<b>")) {
+					tState = textState.BOLD;
+					length = maxLineLength.L80;
+				}
+				else if(token[i].trim().equalsIgnoreCase("<i>")) {
+					tState = textState.ITALICIZED;
+					length = maxLineLength.L80;
+				}
+				if(token[i].trim().equalsIgnoreCase("<h1>")) {
+					hState = headingState.HEADING1;
+					length = maxLineLength.L40;
+				}
+				else if(token[i].trim().equalsIgnoreCase("<h2>")) {
+					hState = headingState.HEADING2;
+					length = maxLineLength.L50;
+				}
+				else if(token[i].trim().equalsIgnoreCase("<h3")) {
+					hState = headingState.HEADING3;
+					length = maxLineLength.L60;
+				}
+				else if(token[i].trim().equalsIgnoreCase("<h4>")) {
+					hState = headingState.HEADING4;
+					length = maxLineLength.L80;
+				}
+				else if(token[i].trim().equalsIgnoreCase("<h5>")) {
+					hState = headingState.HEADING5;
+					length = maxLineLength.L100;
+				}
+				else if(toke[i].trim().equalsIgnoreCase("<h6>")) {
+					hState = headingState.HEADING6;
+					length = maxLineLength.L120;
+				}
 			}
 		}
 	}
