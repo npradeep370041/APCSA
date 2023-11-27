@@ -32,8 +32,8 @@ public class HTMLRender {
 	private int tokenIndex;
 
 	// SimpleHtmlRenderer fields
-	//private SimpleHtmlRenderer render;
-	//private HtmlPrinter browser;
+	private SimpleHtmlRenderer render;
+	private HtmlPrinter browser;
 	
 	// HTMLUtilities used in Render
 	private HTMLUtilities util;
