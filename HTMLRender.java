@@ -52,8 +52,8 @@ public class HTMLRender {
 		tokenIndex = 0;
 		
 		// Initialize Simple Browser
-		//render = new SimpleHtmlRenderer();
-		//browser = render.getHtmlPrinter();
+		render = new SimpleHtmlRenderer();
+		browser = render.getHtmlPrinter();
 		
 		//Initialize HTMLUtilites
 		util = new HTMLUtilities();
@@ -100,42 +100,124 @@ public class HTMLRender {
 			if(tokens[i] != null) {
 				if(tokens[i].trim().equalsIgnoreCase("<p>")) {
 					isParagraph = true;
+					i++;
 				}
 				if(tokens[i].trim().equalsIgnoreCase("<q>")) {
 					tState = textState.QUOTED;
 					length = maxLineLength.L80;
+					i++;
 				}
 				else if(tokens[i].trim().equalsIgnoreCase("<b>")) {
 					tState = textState.BOLD;
 					length = maxLineLength.L80;
+					i++;
 				}
-				else if(token[i].trim().equalsIgnoreCase("<i>")) {
+				else if(tokens[i].trim().equalsIgnoreCase("<i>")) {
 					tState = textState.ITALICIZED;
 					length = maxLineLength.L80;
+					i++;
 				}
-				if(token[i].trim().equalsIgnoreCase("<h1>")) {
+				if(tokens[i].trim().equalsIgnoreCase("<h1>")) {
 					hState = headingState.HEADING1;
 					length = maxLineLength.L40;
+					i++;
 				}
-				else if(token[i].trim().equalsIgnoreCase("<h2>")) {
+				else if(tokens[i].trim().equalsIgnoreCase("<h2>")) {
 					hState = headingState.HEADING2;
 					length = maxLineLength.L50;
+					i++;
 				}
-				else if(token[i].trim().equalsIgnoreCase("<h3")) {
+				else if(tokens[i].trim().equalsIgnoreCase("<h3")) {
 					hState = headingState.HEADING3;
 					length = maxLineLength.L60;
+					i++;
 				}
-				else if(token[i].trim().equalsIgnoreCase("<h4>")) {
+				else if(tokens[i].trim().equalsIgnoreCase("<h4>")) {
 					hState = headingState.HEADING4;
 					length = maxLineLength.L80;
+					i++;
 				}
-				else if(token[i].trim().equalsIgnoreCase("<h5>")) {
+				else if(tokens[i].trim().equalsIgnoreCase("<h5>")) {
 					hState = headingState.HEADING5;
 					length = maxLineLength.L100;
+					i++;
 				}
-				else if(toke[i].trim().equalsIgnoreCase("<h6>")) {
+				else if(tokens[i].trim().equalsIgnoreCase("<h6>")) {
 					hState = headingState.HEADING6;
 					length = maxLineLength.L120;
+					i++;
+				}
+				if(tState == textState.BOLD) {
+					browser.printBold(tokens[i] + " ");
+				}
+				else if(tState == textState.ITALICIZED) {
+					broswer.printItalic(tokens[i] + " ");
+				}
+				else if(tState == textState.QUOTED) {
+					browser.print("\"" + tokens[i] + "\"");
+				}
+				if(tokens[i] == "<hr>") {
+					browser.printHorizontalRule();
+				}
+				if(tokens[i] == "<br>") {
+					browser.printBreak();
+				}
+				if(hState == headingState.HEADING1) {
+					browser.printHeading1(tokens[i]);
+				}
+				else if(hState == headingState.HEADING2) {
+					browser.printHeading2(tokens[i]);
+				}
+				else if(hState == headingState.HEADING3) {
+					browser.printHeading3(tokens[i]);
+				}
+				else if(hState == headingState.HEADING4) {
+					browser.printHeading4(tokens[i]);
+				}
+				else if(hState == headingState.HEADING5) {
+					browser.printHeading5(tokens[i]);
+				}
+				else if(hState == headingState.HEADING6) {
+					browser.printHeading6(tokens[i]);
+				}
+				if(tokens[i].trim().equalsIgnoreCase("</p>")) {
+					isParagraph = false;
+				}
+				if(tokens[i].trim().equalsIgnoreCase("</q>")) {
+					tState = textState.NONE;
+					length = maxLineLength.L80;
+				}
+				else if(tokens[i].trim().equalsIgnoreCase("</b>")) {
+					tState = textState.NONE;
+					length = maxLineLength.L80;
+				}
+				else if(tokens[i].trim().equalsIgnoreCase("</i>")) {
+					tState = textState.NONE;
+					length = maxLineLength.L80;
+				}
+				if(tokens[i].trim().equalsIgnoreCase("</h1>")) {
+					hState = headingState.NONE;
+					length = maxLineLength.L80;
+				}
+				else if(tokens[i].trim().equalsIgnoreCase("</h2>")) {
+					hState = headingState.NONE;
+					length = maxLineLength.L80;
+				}
+				else if(tokens[i].trim().equalsIgnoreCase("</h3")) {
+					hState = headingState.NONE;
+					length = maxLineLength.L80;
+				}
+				else if(tokens[i].trim().equalsIgnoreCase("</h4>")) {
+					hState = headingState.NONE;
+					length = maxLineLength.L80;
+				}
+				else if(tokens[i].trim().equalsIgnoreCase("</h5>")) {
+					hState = headingState.NONE;
+					length = maxLineLength.L80;
+				}
+				else if(tokens[i].trim().equalsIgnoreCase("</h6>")) {
+					hState = headingState.NONE;
+					length = maxLineLength.L80;
 				}
 			}
 		}
