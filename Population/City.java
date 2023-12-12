@@ -59,4 +59,20 @@ public class City implements Comparable<City> {
 		return String.format("%-22s %-22s %-12s %,12d", state, name, designation,
 						population);
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getState() {
+		return state;
+	}
+	
+	public String getDesignation() {
+		return designation;
+	}
+		
+	public int getPopulation() {
+		return population;
+	}
 }
