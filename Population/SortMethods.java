@@ -67,38 +67,51 @@ public class SortMethods {
 	 *	Merge Sort algorithm - in ascending order (you implement)
 	 *	@param arr		array of Integer objects to sort
 	 */
-	public Integer[] mergeSort(Integer [] arr) {
-		if(arr.length == 2) {
-			if(arr[0] > arr[1]) {
-				swap(arr, 0, 1);
+	public void mergeSort(Integer [] arr) {
+		if(arr.length > 1) {
+			int half = arr.length / 2;
+			Integer[] firstArr = new Integer[half];
+			Integer[] secondArr = new Integer[arr.length - half];
+			for(int i = 0; i < half; i++) {
+				firstArr[i] = arr[i];
 			}
-			return arr;
-		}
-		else if(arr.length == 1) {
-			return arr;
-		}
-		else {
-			int halved = arr.length/2;
-			Integer[] firstArr = new Integer[halved];
-			Integer[] secondArr = new Integer[arr.length - halved];
-			Integer[] final1 = mergeSort(firstArr);
-			Integer[] final2 = mergeSort(secondArr);
-			Integer[] merged = merge(final1, final2);
-			return merged;
+			for(int j = half; j < arr.length; j++) {
+				secondArr[j - half] = arr[j];
+			}
+			mergeSort(firstArr);
+			mergeSort(secondArr);
+			merge(firstArr, secondArr, arr);
 		}
 		
 	}
 	
-	public Integer[] merge(Integer [] first, Integer [] second) {
-		Integer[] merged = new Integer[first.length + second.length];
-		for(int i = 0; i < first.length; i++) {
-			merged[i] = first[i];
+	public void merge(Integer[] first, Integer[] second, Integer[] arr) {
+		int i = 0; 
+		int j = 0;
+		int k = 0;
+		while(i < first.length && j < second.length) {
+			if(first[i] <= second[j]) {
+				arr[k] = first[i];
+				i++;
+				k++;
+			}
+			else {
+				arr[k] = second[j];
+				j++;
+				k++;
+			}
 		}
-		for(int j = first.length; j < second.length; j++) {
-			merged[j] = second[j - first.length];
+		while(i < first.length) {
+			arr[k] = first[i];
+			i++;
+			k++;
 		}
-		bubbleSort(merged);
-		return merged;
+		while(j < second.length) {
+			arr[k] = second[j];
+			j++;
+			k++;
+		}
+		
 	}
 	
 	/*****************************************************************/
@@ -133,9 +146,12 @@ public class SortMethods {
 		System.out.println("Array before sort:");
 		printArray(arr);
 		System.out.println();
+		long startMillisec1 = System.currentTimeMillis();
 		bubbleSort(arr);
+		long endMillisec1 = System.currentTimeMillis();
 		System.out.println("Array after sort:");
 		printArray(arr);
+		System.out.println(endMillisec1 - startMillisec1);
 		System.out.println();
 		
 		for (int a = 0; a < 10; a++)
@@ -144,9 +160,12 @@ public class SortMethods {
 		System.out.println("Array before sort:");
 		printArray(arr);
 		System.out.println();
+		long startMillisec2 = System.currentTimeMillis();
 		selectionSort(arr);
+		long endMillisec2 = System.currentTimeMillis();
 		System.out.println("Array after sort:");
 		printArray(arr);
+		System.out.println(endMillisec2 - startMillisec2);
 		System.out.println();
 
 		
@@ -156,9 +175,12 @@ public class SortMethods {
 		System.out.println("Array before sort:");
 		printArray(arr);
 		System.out.println();
+		long startMillisec3 = System.currentTimeMillis();
 		insertionSort(arr);
+		long endMillisec3 = System.currentTimeMillis();
 		System.out.println("Array after sort:");
 		printArray(arr);
+		System.out.println(endMillisec3 - startMillisec3);
 		System.out.println();
 
 	
@@ -168,9 +190,12 @@ public class SortMethods {
 		System.out.println("Array before sort:");
 		printArray(arr);
 		System.out.println();
+		long startMillisec4 = System.currentTimeMillis();
 		mergeSort(arr);
+		long endMillisec4 = System.currentTimeMillis();
 		System.out.println("Array after sort:");
 		printArray(arr);
+		System.out.println(endMillisec4 - startMillisec4);
 		System.out.println();
 	}
 }
