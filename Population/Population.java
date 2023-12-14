@@ -29,19 +29,108 @@ public class Population {
 	}
 	
 	public static void main(String[] args) {
-		long startMillisec = System.currentTimeMillis();
 		Population population = new Population();
 		population.readFile();
-		population.sortAscendingPopulation(population.cities);
-		population.printData(population.cities);
-		population.sortDescendingPopulation(population.cities);
-		population.printData(population.cities);
-		population.sortAcendingName(population.cities);
-		population.printData(population.cities);
-		population.sortDescendingName(population.cities);
-		population.printData(population.cities);
-		long endMillisec = System.currentTimeMillis();
-		System.out.println(endMillisec - startMillisec);
+		population.printIntroduction();
+		System.out.println(population.cities.size() + " cities in database\n");
+		boolean finished = false;
+		while(!finished) {
+			population.printMenu();
+			long startMillisec = 0;
+			long endMillisec = 0;
+			int input = Prompt.getInt("Enter selection");
+			System.out.println();
+			if(input == 1) {
+				startMillisec = System.currentTimeMillis();
+				population.sortAscendingPopulation(population.cities);
+				System.out.println("Fifty least populous cities");
+				population.printData(population.cities, 50);
+				endMillisec = System.currentTimeMillis();
+				System.out.println("\nElapsed Time " + (endMillisec - startMillisec) + " milliseconds\n");
+			}
+			else if(input == 2) {
+				startMillisec = System.currentTimeMillis();
+				population.sortDescendingPopulation(population.cities);
+				System.out.println("Fifty most populous cities");
+				population.printData(population.cities, 50);
+				endMillisec = System.currentTimeMillis();
+				System.out.println("\nElapsed Time " + (endMillisec - startMillisec) + " milliseconds\n");
+			}
+			else if(input == 3) {
+				startMillisec = System.currentTimeMillis();
+				population.sortAcendingName(population.cities);
+				System.out.println("Fifty cities sorted by name");
+				population.printData(population.cities, 50);
+				endMillisec = System.currentTimeMillis();
+				System.out.println("\nElapsed Time " + (endMillisec - startMillisec) + " milliseconds\n");
+			}
+			else if(input == 4) {
+				startMillisec = System.currentTimeMillis();
+				population.sortDescendingName(population.cities);
+				System.out.println("Fifty cities sorted by name descending");
+				population.printData(population.cities, 50);
+				endMillisec = System.currentTimeMillis();
+				System.out.println("\nElapsed Time " + (endMillisec - startMillisec) + " milliseconds\n");
+			}
+			else if(input == 5) {
+				boolean answered = false;
+				while(!answered) {
+					String state = Prompt.getString("Enter state name (ie. Alabama)");
+					startMillisec = System.currentTimeMillis();
+					List<City> states = new ArrayList<City>();
+					for(int i = 0; i < population.cities.size(); i++) {
+						if(state.contains(population.cities.get(i).getState())) {
+							states.add(population.cities.get(i));
+						}
+					}
+					if(states.size() > 0) {
+						population.sortDescendingPopulation(states);
+						System.out.println("\nFifty most populous cities in " + state + "\n");
+						if(states.size() < 50) {
+							population.printData(states, states.size());
+						}
+						else {
+							population.printData(states, 50);
+						}
+						answered = true;
+					}
+					else { 
+						System.out.println("ERROR: " + state + " is not valid");
+					}
+				}
+				endMillisec = System.currentTimeMillis();
+				System.out.println("\nElapsed Time " + (endMillisec - startMillisec) + " milliseconds\n");
+						
+			}
+			else if(input == 6) {
+				boolean answered = false;
+				while(!answered) {
+					String city = Prompt.getString("Enter city name");
+					startMillisec = System.currentTimeMillis();
+					List<City> namedCities = new ArrayList<City>();
+					for(int i = 0; i < population.cities.size(); i++) {
+						if(city.equals(population.cities.get(i).getName())) {
+							namedCities.add(population.cities.get(i));
+						}
+					}
+					if(namedCities.size() > 0) {
+						population.sortDescendingPopulation(namedCities);
+						System.out.println("\nCity " + city + " by population\n");
+						population.printData(namedCities, namedCities.size());
+						answered = true;
+					}
+					else {
+						System.out.println("ERROR: " + city + " is not valid");
+					}
+				}
+				endMillisec = System.currentTimeMillis();
+				System.out.println("\nElapsed Time " + (endMillisec - startMillisec) + " milliseconds\n");
+			}
+			else if(input == 9) {
+				System.out.println("Thanks for using Population!");
+				finished = true;
+			}
+		}
 	}
 	
 	/**	Prints the introduction to Population */
@@ -70,12 +159,17 @@ public class Population {
 	 *	Print an array of Integers to the screen
 	 *	@param arr		the array of Integers
 	 */
-	public void printData(List<City> arr) {
-		for(int i = 0; i < 50; i++) {
+	public void printData(List<City> arr, int length) {
+		System.out.print("    ");
+		System.out.printf("%-22s %-22s %-12s %13s", "State", "City", "Type", "Population");
+		System.out.println();
+		for(int i = 0; i < length; i++) {
+			System.out.printf("%2d", i + 1);
+			System.out.print(": ");
 			System.out.printf("%-23s", arr.get(i).getState());
 			System.out.printf("%-23s", arr.get(i).getName());
-			System.out.printf("%-23s", arr.get(i).getDesignation());
-			System.out.printf("%-23s", arr.get(i).getPopulation());
+			System.out.printf("%-13s", arr.get(i).getDesignation());
+			System.out.printf("%13s", arr.get(i).getPopulation());
 			System.out.println();
 		}
 	}
@@ -151,9 +245,9 @@ public class Population {
 	
 	public void sortAcendingName(List<City> arr) {
 		for(int outer = 1; outer < arr.size(); outer++) {
-			String[] value = {arr.get(outer).getName()};
+			String value = arr.get(outer).getName();
 			int inner = outer - 1;
-			while(inner >= 0 && arr.get(inner).getName().compareTo(value[0]) > 0) {
+			while(inner >= 0 && arr.get(inner).getName().compareTo(value) > 0) {
 				swap(arr, inner, inner + 1);
 				inner--;
 			}
