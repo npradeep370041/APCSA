@@ -42,6 +42,11 @@ public class SudokuMaker {
 	}
 	public void createPuzzle(int row, int col) {
 		boolean isGood = false;
+		boolean[] numbers = new boolean[9];
+		boolean allChecked = false;
+		for(int setter = 0; setter < 9; setter++) {
+			numbers[setter] = false;
+		}
 		while(!isGood) {
 			isGood = true;
 			puzzle[row][col] = (int)(Math.random() * 9) + 1;
@@ -55,8 +60,27 @@ public class SudokuMaker {
 					isGood = false;
 				}
 			}
-			if(row
+			if(!isGood) {
+				numbers[puzzle[row][col] - 1] = true;
+			}
+			if(!isGood) {
+				for(int checker = 0; checker < 9; checker++) {
+					if(numbers[checker] = false) { 
+						allChecked = false;
+					}
+				}
+				if(allChecked) {
+					isGood = true;
+					if(col == 0 && row != 0) {
+						createPuzzle(row - 1, 8);
+					}
+					else if(row != 0) {
+						createPuzzle(row, col - 1);
+					}
+				}
+			}
 		}
+		printPuzzle();
 		if(col == 8 && row != 8) {
 			createPuzzle(row + 1, 0);
 		}
