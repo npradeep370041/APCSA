@@ -1,4 +1,5 @@
 import java.util.List;		// used by expression evaluator
+import java.util.ArrayList;
 
 /**
  *	<Description goes here>
@@ -81,134 +82,148 @@ public class SimpleCalc {
 	 */
 	public double evaluateExpression(List<String> tokens) {
 		boolean isVariableExpression = false;
+		if(tokens.get(1).equals("=")) {
+			isVariableExpression = true;
+		}
+		int counter = 0;
 		for(String token : tokens) {
-			try {
-				valueStack.push(Double.parseDouble(token));
+			if(isVariableExpression) {
+				counter++;
 			}
-			catch(NumberFormatException e) {
-				if(utils.isOperator()) { 
-					if(!operatorStack.isEmpty()) {
-						if(this.hasPrecedence(operatorStack.peek(), token)) {
-							operatorStack.push(token);
+			if(counter > 1 || !isVariableExpression) {
+				try {
+					valueStack.push(Double.parseDouble(token));
+				}
+				catch(NumberFormatException e) {
+					if(utils.isOperator(token.charAt(0))) { 
+						if(!operatorStack.isEmpty()) {
+							if(this.hasPrecedence(operatorStack.peek(), token)) {
+								operatorStack.push(token);
+							}
+							else {
+								boolean checker = true;
+								while(!operatorStack.isEmpty() && this.hasPrecedence(token, operatorStack.peek()) && checker) {
+									if(!operatorStack.isEmpty() && operatorStack.peek().equals("+")) {
+										double temp = valueStack.pop();
+										double newVal = valueStack.pop() + temp;
+										valueStack.push(newVal);
+										operatorStack.pop();
+									}
+									if(!operatorStack.isEmpty() && operatorStack.peek().equals("-")) {
+										double temp = valueStack.pop();
+										double newVal = valueStack.pop() - temp;
+										valueStack.push(newVal);
+										operatorStack.pop();
+									}
+									if(!operatorStack.isEmpty() && operatorStack.peek().equals("*")) {
+										double temp = valueStack.pop();
+										double newVal = valueStack.pop() * temp;
+										valueStack.push(newVal);
+										operatorStack.pop();
+									}
+									if(!operatorStack.isEmpty() && operatorStack.peek().equals("/")) {
+										double temp = valueStack.pop();
+										double newVal = valueStack.pop() / temp;
+										valueStack.push(newVal);
+										operatorStack.pop();
+									}
+									if(!operatorStack.isEmpty() && operatorStack.peek().equals("^")) {
+										double temp = valueStack.pop();
+										double newVal = Math.pow(valueStack.pop(), temp);
+										valueStack.push(newVal);
+										operatorStack.pop();
+									}
+									if(!operatorStack.isEmpty() && operatorStack.peek().equals("%")) {
+										double temp = valueStack.pop();
+										double newVal = valueStack.pop() % temp;
+										valueStack.push(newVal);
+										operatorStack.pop();
+									}
+									if(!operatorStack.isEmpty() && operatorStack.peek().equals("(")) {
+										operatorStack.pop();
+										checker = false;
+									}
+								}
+								if(!token.equals(")")) {
+									operatorStack.push(token);	
+								}
+							}
 						}
 						else {
-							boolean checker = true;
-							while(!operatorStack.isEmpty() && this.hasPrecedence(token, operatorStack.peek()) && checker) {
-								if(!operatorStack.isEmpty() && operatorStack.peek().equals("+")) {
-									double temp = valueStack.pop();
-									double newVal = valueStack.pop() + temp;
-									valueStack.push(newVal);
-									operatorStack.pop();
-								}
-								if(!operatorStack.isEmpty() && operatorStack.peek().equals("-")) {
-									double temp = valueStack.pop();
-									double newVal = valueStack.pop() - temp;
-									valueStack.push(newVal);
-									operatorStack.pop();
-								}
-								if(!operatorStack.isEmpty() && operatorStack.peek().equals("*")) {
-									double temp = valueStack.pop();
-									double newVal = valueStack.pop() * temp;
-									valueStack.push(newVal);
-									operatorStack.pop();
-								}
-								if(!operatorStack.isEmpty() && operatorStack.peek().equals("/")) {
-									double temp = valueStack.pop();
-									double newVal = valueStack.pop() / temp;
-									valueStack.push(newVal);
-									operatorStack.pop();
-								}
-								if(!operatorStack.isEmpty() && operatorStack.peek().equals("^")) {
-									double temp = valueStack.pop();
-									double newVal = Math.pow(valueStack.pop(), temp);
-									valueStack.push(newVal);
-									operatorStack.pop();
-								}
-								if(!operatorStack.isEmpty() && operatorStack.peek().equals("%")) {
-									double temp = valueStack.pop();
-									double newVal = valueStack.pop() % temp;
-									valueStack.push(newVal);
-									operatorStack.pop();
-								}
-								if(!operatorStack.isEmpty() && operatorStack.peek().equals("(")) {
-									operatorStack.pop();
-									checker = false;
-								}
-							}
-							if(!token.equals(")")) {
-								operatorStack.push(token);	
-							}
+							operatorStack.push(token);
 						}
 					}
 					else {
-						operatorStack.push(token);
-					}
-				}
-				else {
-					isVariableExpression = true;
-					int index = -1;
-					for(int i = 0; i < identifiers.size(); i++) {
-						if(identifiers[i].getName().equals(token)) {
-							index = i;
+						isVariableExpression = true;
+						int index = -1;
+						for(int i = 0; i < identifiers.size(); i++) {
+							if(identifiers.get(i).getName().equals(token)) {
+								index = i;
+							}
 						}
-					}
-					if(index == -1) {
-						identifiers.add(new Identifier());
-						identifiers[identifiers.size() - 1].setName(token);
-					}
-					else {
-						valueStack.push(identifiers[index].getValue());
-					}
-				}	
+						if(index == -1) {
+							identifiers.add(new Identifier());
+							identifiers.get(identifiers.size() - 1).setName(token);
+						}
+						else {
+							valueStack.push(identifiers.get(index).getValue());
+						}
+					}	
+				}		
 			}
-			if(!isVariableExpression) {
-				while(!operatorStack.isEmpty()) {
-					if(!operatorStack.isEmpty() && operatorStack.peek().equals("+")) {
-						double temp = valueStack.pop();
-						double newVal = valueStack.pop() + temp;
-						valueStack.push(newVal);
-						operatorStack.pop();
-					}
-					if(!operatorStack.isEmpty() && operatorStack.peek().equals("-")) {
-						double temp = valueStack.pop();
-						double newVal = valueStack.pop() - temp;
-						valueStack.push(newVal);
-						operatorStack.pop();
-					}
-					if(!operatorStack.isEmpty() && operatorStack.peek().equals("*")) {
-						double temp = valueStack.pop();
-						double newVal = valueStack.pop() * temp;
-						valueStack.push(newVal);
-						operatorStack.pop();
-					}
-					if(!operatorStack.isEmpty() && operatorStack.peek().equals("/")) {
-						double temp = valueStack.pop();
-						double newVal = valueStack.pop() / temp;
-						valueStack.push(newVal);
-						operatorStack.pop();
-					}
-					if(!operatorStack.isEmpty() && operatorStack.peek().equals("^")) {
-						double temp = valueStack.pop();
-						double newVal = Math.pow(valueStack.pop(), temp);
-						valueStack.push(newVal);
-						operatorStack.pop();
-					}
-					if(!operatorStack.isEmpty() && operatorStack.peek().equals("%")) {
-						double temp = valueStack.pop();
-						double newVal = valueStack.pop() % temp;
-						valueStack.push(newVal);
-						operatorStack.pop();
-					}
-					if(!operatorStack.isEmpty() && operatorStack.peek().equals("(")) {
-						operatorStack.pop();
-					}
-					if(!operatorStack.isEmpty() && operatorStack.peek().equals(")")) {
-						operatorStack.pop();
-					}
-				}
-				return valueStack.peek();	
-			}	
 		}
+		while(!operatorStack.isEmpty()) {
+			if(!operatorStack.isEmpty() && operatorStack.peek().equals("+")) {
+				double temp = valueStack.pop();
+				double newVal = valueStack.pop() + temp;
+					valueStack.push(newVal);
+				operatorStack.pop();
+				}
+			if(!operatorStack.isEmpty() && operatorStack.peek().equals("-")) {
+				double temp = valueStack.pop();
+				double newVal = valueStack.pop() - temp;
+				valueStack.push(newVal);
+				operatorStack.pop();
+			}
+			if(!operatorStack.isEmpty() && operatorStack.peek().equals("*")) {
+				double temp = valueStack.pop();
+				double newVal = valueStack.pop() * temp;
+				valueStack.push(newVal);
+				operatorStack.pop();
+			}
+			if(!operatorStack.isEmpty() && operatorStack.peek().equals("/")) {
+				double temp = valueStack.pop();
+				double newVal = valueStack.pop() / temp;
+				valueStack.push(newVal);
+				operatorStack.pop();
+			}
+			if(!operatorStack.isEmpty() && operatorStack.peek().equals("^")) {
+				double temp = valueStack.pop();
+				double newVal = Math.pow(valueStack.pop(), temp);
+				valueStack.push(newVal);
+				operatorStack.pop();
+			}
+			if(!operatorStack.isEmpty() && operatorStack.peek().equals("%")) {
+				double temp = valueStack.pop();
+				double newVal = valueStack.pop() % temp;
+				valueStack.push(newVal);
+				operatorStack.pop();
+			}
+			if(!operatorStack.isEmpty() && operatorStack.peek().equals("(")) {
+				operatorStack.pop();
+			}
+			if(!operatorStack.isEmpty() && operatorStack.peek().equals(")")) {
+					operatorStack.pop();
+			}
+		}
+		if(isVariableExpression) {
+			for(int i = 0; i < identifiers.size();i++) {
+				if(identifiers.get(i).getName().equals(tokens.get(0))) {
+					identifiers.get(i).setValue(valueStack.peek());
+				}
+			}
+		}
+		return valueStack.peek();	
 	}
 	
 	/**
