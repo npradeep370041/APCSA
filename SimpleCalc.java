@@ -40,6 +40,7 @@ public class SimpleCalc {
 	 *	and display the answer.
 	 */
 	public void runCalc() {
+		this.initializeIdentifiers();
 		while(true) {
 			String expression = Prompt.getString("");
 			if(expression.equals("q")) {
@@ -47,6 +48,9 @@ public class SimpleCalc {
 			}
 			if(expression.equals("h")) {
 				this.printHelp();
+			}
+			else if(expression.equals("l")) {
+				this.printList();
 			}
 			else {
 				List<String> tokens = utils.tokenizeExpression(expression);
@@ -59,20 +63,27 @@ public class SimpleCalc {
 	/**	Print help */
 	public void printHelp() {
 		System.out.println("Help:");
-		System.out.println("  h - this message\n  q - quit\n");
+		System.out.println("  h - this message\n  q - quit\n  l - variables\n");
 		System.out.println("Expressions can contain:");
 		System.out.println("  integers or decimal numbers");
 		System.out.println("  arithmetic operators +, -, *, /, %, ^");
 		System.out.println("  parentheses '(' and ')'");
 	}
 	
+	public void printList() {
+		System.out.println("Variables:");
+		for(int i = 0; i < identifiers.size(); i++) {
+			System.out.printf("%-20s = %s%n", "          " + identifiers.get(i).getName(),"          " + identifiers.get(i).getValue());  
+		}
+	}
+	
 	public void initializeIdentifiers() {
-		Identifier pi = new Identifier();
-		pi.setName("pi");
-		pi.setValue(Math.PI);
-		Identifier e = new Identifier();
-		e.setName("e");
-		e.setValue(Math.E);
+		identifiers.add(new Identifier());
+		identifiers.get(0).setName("pi");
+		identifiers.get(0).setValue(Math.PI);
+		identifiers.add(new Identifier());
+		identifiers.get(1).setName("e");
+		identifiers.get(1).setValue(Math.E);
 	}
 	
 	/**
@@ -81,6 +92,24 @@ public class SimpleCalc {
 	 *	@return			a double value of the evaluated expression
 	 */
 	public double evaluateExpression(List<String> tokens) {
+		if(tokens.size() == 1) {
+			try {
+				return Double.parseDouble(tokens.get(0));
+			}
+			catch(NumberFormatException e) {
+				for(int i = 0; i < identifiers.size(); i++) {
+					if(identifiers.get(i).getName().equals(tokens.get(0))) {
+						System.out.print(identifiers.get(i).getName() + " = ");
+						return identifiers.get(i).getValue();
+					}
+				}
+				identifiers.add(new Identifier());
+				identifiers.get(identifiers.size() - 1).setName(tokens.get(0));
+				identifiers.get(identifiers.size() - 1).setValue(0);
+				System.out.print(identifiers.get(identifiers.size() - 1).getName() + " = ");
+				return 0;
+			}
+		}
 		boolean isVariableExpression = false;
 		if(tokens.get(1).equals("=")) {
 			isVariableExpression = true;
@@ -90,7 +119,7 @@ public class SimpleCalc {
 			if(isVariableExpression) {
 				counter++;
 			}
-			if(counter > 1 || !isVariableExpression) {
+			if(counter > 2 || !isVariableExpression) {
 				try {
 					valueStack.push(Double.parseDouble(token));
 				}
@@ -154,19 +183,10 @@ public class SimpleCalc {
 						}
 					}
 					else {
-						isVariableExpression = true;
-						int index = -1;
 						for(int i = 0; i < identifiers.size(); i++) {
 							if(identifiers.get(i).getName().equals(token)) {
-								index = i;
+								valueStack.push(identifiers.get(i).getValue());
 							}
-						}
-						if(index == -1) {
-							identifiers.add(new Identifier());
-							identifiers.get(identifiers.size() - 1).setName(token);
-						}
-						else {
-							valueStack.push(identifiers.get(index).getValue());
 						}
 					}	
 				}		
@@ -176,7 +196,7 @@ public class SimpleCalc {
 			if(!operatorStack.isEmpty() && operatorStack.peek().equals("+")) {
 				double temp = valueStack.pop();
 				double newVal = valueStack.pop() + temp;
-					valueStack.push(newVal);
+				valueStack.push(newVal);
 				operatorStack.pop();
 				}
 			if(!operatorStack.isEmpty() && operatorStack.peek().equals("-")) {
@@ -217,9 +237,21 @@ public class SimpleCalc {
 			}
 		}
 		if(isVariableExpression) {
-			for(int i = 0; i < identifiers.size();i++) {
+			int index = -1;
+			for(int i = 0; i < identifiers.size(); i++) {
+				if(identifiers.get(i).getName().equals(tokens.get(0))) {
+					index = i;
+				}
+			}
+			if(index == -1) {
+				identifiers.add(new Identifier());
+				identifiers.get(identifiers.size() - 1).setName(tokens.get(0));
+				identifiers.get(identifiers.size() - 1).setValue(0);
+			}
+			for(int i = 0; i < identifiers.size(); i++) {
 				if(identifiers.get(i).getName().equals(tokens.get(0))) {
 					identifiers.get(i).setValue(valueStack.peek());
+					System.out.print(identifiers.get(i).getName() + " = ");
 				}
 			}
 		}
