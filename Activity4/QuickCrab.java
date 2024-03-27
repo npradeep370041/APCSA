@@ -8,11 +8,9 @@ import java.util.ArrayList;
 
 public class QuickCrab extends CrabCritter {
 	
-	public ArrayList<Location> getLocationsInDirections(int[] directions) {
-		ArrayList<Location> locs = new ArrayList<Location>();
+	private void addMoveLocations(int[] directions, ArrayList<Location> locs) {
         Grid gr = getGrid();
         Location loc = getLocation();
-    
         for(int i = 0; i < directions.length; i++) {
             Location neighborLoc = loc.getAdjacentLocation(getDirection() + directions[i]);
             if (gr.isValid(neighborLoc)) {
@@ -22,10 +20,16 @@ public class QuickCrab extends CrabCritter {
 				}
 			}
         }
-        return locs;
 	}
 	
-	public void makeMove(Location loc) {
+	public void getMoveLocations() {
+		ArrayList<Location> locs = new ArrayList<Location>();
+		int[] directions = {Location.LEFT, Location.RIGHT };
+		addMoveLocations(directions, locs);
+		if(locs.size > 0) {
+			return locs;
+		}
+		return super.getMoveLocations();
 		
 	} 
 }
