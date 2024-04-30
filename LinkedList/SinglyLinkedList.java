@@ -11,14 +11,21 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	/* Fields */
 	private ListNode<E> head, tail;		// head and tail pointers to list
 	
+	private int size;
+	
 	/* No-args Constructors */
-	public SinglyLinkedList() {}
+	public SinglyLinkedList() {
+		size = 0;
+	}
 	
 	/** Copy constructor */
 	public SinglyLinkedList(SinglyLinkedList<E> oldList) {}
 	
 	/**	Clears the list of elements */
-	public void clear() {}
+	public void clear() {
+		head = null;
+		tail = null;
+	}
 	
 	/**	Add the object to the end of the list
 	 *	@param obj		the object to add
@@ -27,11 +34,19 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	public boolean add(E obj) {
 		if(head == null) {
 			head = new ListNode(obj);
-			tail = head;
+			size++;
 		}
-		ListNode<E> added = new ListNode<E>(tail.getValue());
-		tail = new ListNode<E>(obj);
-		added.setNext(tail);
+		else if(tail == null) {
+			tail = new ListNode(obj);
+			head.setNext(tail);
+			size++;
+		}
+		else {
+			ListNode<E> added = tail;
+			tail = new ListNode(obj);
+			added.setNext(tail);
+			size++;
+		}
 		return true;
 	}
 	
@@ -42,7 +57,32 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@throws NoSuchElementException if index does not exist
 	 */
 	public boolean add(int index, E obj) {
-		return false;
+		if(index > size) {
+			throw new NoSuchElementException();
+		}
+		else if(index == size) {
+			add(obj);
+		}
+		else if(index == 0) {
+			ListNode<E> temp = head;
+			head = new ListNode(obj);
+			head.setNext(temp);	
+			return true;
+		}
+		else {
+			ListNode<E> start = head;
+			int i = 0;
+			while (i != index - 1) {
+				start = start.getNext();
+				i++;
+			}
+			ListNode<E> object = new ListNode(obj);
+			object.setNext(start.getNext());
+			int j = index - 1;
+			
+			return true;
+		}
+		return true;
 	}
 	
 	/**	@return the number of elements in this list */
