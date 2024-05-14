@@ -4,6 +4,10 @@
  *	@author	
  *	@since	
  */
+ 
+import java.io.PrintWriter;
+import java.util.Scanner;
+
 public class SnakeGame {
 	
 	private Snake snake;		// the snake in the game
@@ -14,6 +18,7 @@ public class SnakeGame {
 	/*	Constructor	*/
 	public SnakeGame(int height, int width) { 
 		board = new SnakeBoard(height, width);
+		score = 0;
 	}
 	
 	/*	Main method	*/
@@ -57,6 +62,21 @@ public class SnakeGame {
 				else if(action.equals("h")) {
 					helpMenu();
 				}
+				else if(action.equals("f")) {
+					PrintWriter file = FileUtils.openToWrite("savedGame.txt");
+					file.println("Score " + score);
+					file.println("Target " + target.getRow() + " " + target.getCol());
+					file.println("Snake " + snake.size());
+					for(int i = 0; i < snake.size(); i++) {
+						file.println(snake.get(i).getValue().getRow() + " " + snake.get(i).getValue().getCol());
+					}
+					file.close();
+					endGame = true;
+				}
+				else if(action.equals("r")) {
+					Scanner file = FileUtils.openToRead("savedGame.txt");
+					score = file.nextInt();
+				}
 				else if(action.equals("w")) {
 					Coordinate c = new Coordinate(snake.get(0).getValue().getRow() - 1, snake.get(0).getValue().getCol());
 					if(c.getRow() < 0 || snake.indexOf(c) != -1) {
@@ -82,12 +102,11 @@ public class SnakeGame {
 							}
 						}
 						target = new Coordinate(row, col);
+						score++;
 					}
 					else {
-						for(int i = 0; i < snake.size() - 1; i++) {
-							snake.set(i + 1, snake.get(i).getValue());
-						}
-						snake.set(0, c);
+						snake.add(0, c);
+						snake.remove(snake.size() - 1);
 					}
 				}
 				else if(action.equals("a")) {
@@ -115,12 +134,11 @@ public class SnakeGame {
 							}
 						}
 						target = new Coordinate(row, col);
+						score++;
 					}
 					else {
-						for(int i = 0; i < snake.size() - 1; i++) {
-							snake.set(i + 1, snake.get(i).getValue());
-						}
-						snake.set(0, c);
+						snake.add(0, c);
+						snake.remove(snake.size() - 1);
 					}
 				}
 				else if(action.equals("s")) {
@@ -148,12 +166,11 @@ public class SnakeGame {
 							}
 						}
 						target = new Coordinate(row, col);
+						score++;
 					}
 					else {
-						for(int i = 0; i < snake.size() - 1; i++) {
-							snake.set(i + 1, snake.get(i).getValue());
-						}
-						snake.set(0, c);
+						snake.add(0, c);
+						snake.remove(snake.size() - 1);
 					}
 				}
 				else if(action.equals("d")) {
@@ -181,12 +198,11 @@ public class SnakeGame {
 							}
 						}
 						target = new Coordinate(row, col);
+						score++;
 					}
 					else {
-						for(int i = 0; i < snake.size() - 1; i++) {
-							snake.set(i + 1, snake.get(i).getValue());
-						}
-						snake.set(0, c);
+						snake.add(0, c);
+						snake.remove(snake.size() - 1);
 					}
 				}
 			}
