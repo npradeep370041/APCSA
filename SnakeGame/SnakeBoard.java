@@ -12,12 +12,14 @@ public class SnakeBoard {
 	/*	Constructor	*/
 	public SnakeBoard(int height, int width) {
 		board = new char[height][width];
+		clearBoard();
 	}
 	
 	/**
 	 *	Print the board to the screen.
 	 */
 	public void printBoard(Snake snake, Coordinate target) {
+		clearBoard();
 		for(int i = 0; i <= board[0].length + 1; i++) {
 			if(i == 0 || i == board[0].length + 1) {
 				System.out.print("+ ");
@@ -66,6 +68,14 @@ public class SnakeBoard {
 	
 	public int numCols() {
 		return board[0].length;
+	}
+	
+	public void clearBoard() {
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board[0].length; j++) {
+				board[i][j] = ' ';
+			}
+		}
 	}
 	
 	/********************************************************/
