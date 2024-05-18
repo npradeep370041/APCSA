@@ -190,7 +190,92 @@ public class BinaryTree<E extends Comparable<E>> {
 	 *	@return				TreeNode that connects to parent
 	 */
 	public TreeNode<E> remove(TreeNode<E> node, E value) {
-		return null;
+		TreeNode<E> curr = root;
+		TreeNode<E> prev = curr;
+		while(curr.getLeft() != null || curr.getRight() != null) {
+			if(value.compareTo(curr.getValue()) == 0) {
+				if(curr.getRight() == null) {
+					if(curr == root) {
+						root = root.getLeft();
+					}
+					else {
+						if(curr.getValue().compareTo(prev.getValue()) < 0) {
+							prev.setLeft(curr.getLeft());
+						}
+						else {
+							prev.setRight(curr.getLeft());
+						}
+					}
+				}
+				else {
+					if(curr.getRight().getLeft() == null) {
+						if(curr == root) {
+							root = new TreeNode<E>(root.getRight().getValue(), root.getLeft(), root.getRight().getRight());
+						}
+						else {
+							if(curr.getValue().compareTo(prev.getValue()) < 0) {
+								prev.setLeft(curr.getRight());
+							}
+							else {
+								prev.setRight(curr.getRight());
+							}
+							if(curr.getRight() != null) {
+								curr.getRight().setLeft(curr.getLeft());
+							}
+						}
+					}
+					else {
+						if(curr == root) {
+							curr = curr.getRight();
+							while(curr.getLeft() != null) {
+								curr = curr.getLeft();
+							}
+							E newVal = curr.getValue();
+							remove(newVal);
+							root = new TreeNode<E>(newVal, root.getLeft(), root.getRight());
+						}
+						else {
+							TreeNode<E> saved = curr;
+							curr = curr.getRight();
+							while(curr.getLeft() != null) {
+								curr = curr.getLeft();
+							}
+							E newVal = curr.getValue();
+							remove(newVal);
+							saved = new TreeNode<E>(newVal, saved.getLeft(), saved.getRight());
+							if(saved.getValue().compareTo(prev.getValue()) < 0) {
+								prev.setLeft(saved);
+							}
+							else {
+								prev.setRight(saved);
+							}
+						}
+					}
+				}
+				return root;
+			}
+			else {
+				if(value.compareTo(curr.getValue()) < 0) {
+					prev = curr;
+					curr = curr.getLeft();
+				}
+				else if(value.compareTo(curr.getValue()) > 0) {
+					prev = curr;
+					curr = curr.getRight();
+				}
+			}
+			
+		}
+		if(value.compareTo(prev.getValue()) < 0) {
+			prev.setLeft(null);
+		}
+		else {
+			prev.setRight(null);
+		}
+		if(curr == root) {
+			root = null;
+		}
+		return root;
 	}
 	
 
